@@ -1119,7 +1119,7 @@ Public Class Service1
                             If process_type.assigning_type = "User Cluster" Then
                                 log(" >> Assessing: " & process_type.assigning_type)
                                 log(" || " & process_type.name & "(Task ID: " & task.id & ") : Assigning Type: " & process_type.assigning_type)
-                                Dim agents = db.GetNextTaskDefinitionAgent(task.id).ToList.Distinct()
+                                Dim agents = db.GetNextTaskDefinitionAgent(task_definition.id).ToList.Distinct()
                                 log("Agents (" & process.external_reference & "): " & Newtonsoft.Json.JsonConvert.SerializeObject(agents))
                                 Dim clusterAgents As New List(Of Integer)
                                 For Each cluster In db.role_clusters.Where(Function(f) f.is_deleted = False And f.division = process.division And f.role = task.role)
@@ -1218,164 +1218,18 @@ Public Class Service1
                             log(" >> Assession Completed: " & process_type.assigning_type & " <<  ")
                         End If
                     End If
-                    ''If not first task
+                    ''For later tasks, preserve continuity with the last completed task first.
+                    ''If that user/role path cannot resolve an assignee, use the application's
+                    ''role-cluster or user-portfolio membership as the deterministic fallback.
                     If task_definition.sort_order <> 1 Then
-                        Try
-                            ''Get Last Agent
-                            'Dim lastOrder = task.sort_order - 1
-                            Dim lastOrder = db.tasks.Where(Function(f) f.process = task.process And f.sort_order <> task.sort_order And f.status = 4).OrderByDescending(Function(f) f.sort_order).First
-                            Dim tt = lastOrder
-                            Dim lastTaskDefinition = db.task_definitions.Single(Function(f) f.id = tt.task_definition)
-                            Dim lastTask = db.tasks.Single(Function(f) f.process = task.process And f.task_definition = lastTaskDefinition.id)
-                            If db.tasks.Where(Function(f) f.process = task.process And f.role = task.role And f.id <> task.id And Not f.assigned_to Is Nothing).Count <> 0 Then
-                                Try
-                                    ''Take same agent in the process
-                                    Dim last = db.tasks.Where(Function(ff) ff.process = task.process And ff.role = task.role And ff.id <> task.id And Not ff.assigned_to Is Nothing).OrderByDescending(Function(f) f.sort_order).First()
-                                    Dim agent = db.users.First(Function(ff) ff.id = last.assigned_to)
-                                    log("  | >> Next Agent: (" & agent.username & ")")
-                                    Dim form As New List(Of FormValue)
-                                    form.Add(New FormValue("description_of_activity", ""))
-                                    form.Add(New FormValue("assigned_to", agent.id))
-                                    form.Add(New FormValue("cc_agents", ""))
-                                    form.Add(New FormValue("priority", "2"))
-                                    PostForm(form, assignmentPage, task.id)
-                                Catch ex As Exception
-                                    log("  Error: | >> Next Agent:" & ex.Message)
-                                    log("  Error: | >> Next Agent:" & ex.StackTrace)
-                                End Try
-                            Else
-                                Try
-                                    log("Assigning Type: " & process_type.assigning_type)
-                                    If process_type.assigning_type = "User Cluster" Then
-                                        'Get Last Task Cluster
-                                        Dim lastTaskCluster As role_clusters = Nothing
-                                        For Each rc In db.role_clusters.Where(Function(f) f.role = lastTaskDefinition.role)
-                                            If Not rc.cluster_users Is Nothing Then
-                                                If rc.cluster_users <> "" Then
-                                                    For Each u In rc.cluster_users.Split(",")
-                                                        If u = lastTask.assigned_to Then
-                                                            lastTaskCluster = rc
-                                                        End If
-                                                    Next
-                                                End If
-                                                If lastTaskCluster Is Nothing Then
-                                                    If Not rc.cluster_alternative_users Is Nothing Then
-                                                        If rc.cluster_alternative_users <> "" Then
-                                                            For Each u In rc.cluster_alternative_users.Split(",")
-                                                                If u = lastTask.assigned_to Then
-                                                                    If Not rc.entity_groups Is Nothing Then
-                                                                        For Each ce In rc.entity_groups.Split(",")
-                                                                            If process.entity_type.HasValue Then
-                                                                                If ce = process.entity_type.Value.ToString Then
-                                                                                    lastTaskCluster = rc
-                                                                                End If
-                                                                            End If
-                                                                        Next
-                                                                    End If
-                                                                End If
-                                                            Next
-                                                        End If
-                                                    End If
-
-                                                End If
-                                            End If
-                                        Next
-                                        Dim assigned = False
-
-                                        Dim assign_to As Integer = 0
-
-                                        If lastTaskCluster Is Nothing Then
-                                            log("  | >> No Cluster Found for Last Task: " & lastTask.name)
-                                        End If
-                                        If task.role Is Nothing Then
-                                            log("  | >> No Role Found for Task: " & task.name)
-                                        End If
-                                        If lastTaskCluster.role = task.role Then
-                                            assign_to = lastTask.assigned_to
-                                        End If
-
-                                        If lastTaskCluster.role <> task.role Then
-                                            assign_to = lastTaskCluster.cluster_supervisor
-                                        End If
-                                        If assign_to > 0 Then
-                                            Dim agent = db.users.Single(Function(f) f.id = assign_to)
-                                            log("  | >> Next Agent: (" & agent.username & ")")
-                                            Dim form As New List(Of FormValue)
-                                            form.Add(New FormValue("description_of_activity", ""))
-                                            form.Add(New FormValue("assigned_to", agent.id))
-                                            form.Add(New FormValue("cc_agents", ""))
-                                            form.Add(New FormValue("priority", "2"))
-                                            PostForm(form, assignmentPage, task.id)
-                                            assigned = True
-                                        End If
-
-                                    End If
-
-                                    If process_type.assigning_type = "User Portfolio" Then
-                                        'Get Last Task User Portfolio
-                                        Dim lastTaskCluster As user_portfolios = Nothing
-                                        Dim portfolioSupervisor As Integer = 0
-                                        For Each rc In db.user_portfolios.Where(Function(f) f.portfolio_role = lastTaskDefinition.role And f.division = process.division And f.status = True)
-                                            log("  ||>> Prevous Task Role: User Portfolio: " & rc.portfolio_name)
-                                            If Not rc.portfolio_entities Is Nothing And rc.portfolio_entities <> "" Then
-                                                For Each pe In rc.portfolio_entities.Split(",")
-                                                    Dim peID = CInt(pe)
-                                                    If peID = process.entity Then
-                                                        portfolioSupervisor = rc.portfolio_supervisor
-                                                        lastTaskCluster = rc
-                                                    End If
-                                                Next
-                                            End If
-                                        Next
-                                        Dim assigned = False
-
-                                        Dim assign_to As Integer = 0
-
-                                        If lastTaskCluster Is Nothing Then
-                                            log("  | >> No User Portfolio Found for Last Task: " & lastTask.name)
-                                        End If
-                                        If task.role Is Nothing Then
-                                            log("  | >> No Role Found for Task: " & task.name)
-                                        End If
-                                        If lastTaskCluster.portfolio_role = task.role Then
-                                            assign_to = lastTask.assigned_to
-                                        End If
-
-                                        If lastTaskCluster.portfolio_role <> task.role Then
-                                            assign_to = lastTaskCluster.portfolio_supervisor
-                                        End If
-                                        If assign_to > 0 Then
-                                            Dim agent = db.users.Single(Function(f) f.id = assign_to)
-                                            log("  | >> Next Agent: (" & agent.username & ")")
-                                            Dim form As New List(Of FormValue)
-                                            form.Add(New FormValue("description_of_activity", ""))
-                                            form.Add(New FormValue("assigned_to", agent.id))
-                                            form.Add(New FormValue("cc_agents", ""))
-                                            form.Add(New FormValue("priority", "2"))
-                                            PostForm(form, assignmentPage, task.id)
-                                            assigned = True
-                                        End If
-
-                                    End If
-
-
-                                Catch ex As Exception
-                                    log(" >> Error: Assigning: " & ex.Message)
-                                    log(ex.Message)
-                                    log(ex.StackTrace)
-                                    log(Newtonsoft.Json.JsonConvert.SerializeObject(ex))
-                                End Try
-
-                            End If
-
-
-                        Catch ex As Exception
-                            log(" >> Task: " & task.name & " not completed...")
-                            log(ex.Message)
-                            log(ex.StackTrace)
-
-                        End Try
-
+                        Dim assigned = TryAssignFromLastCompletedTask(task, task_definition, process, process_type, assignmentPage)
+                        If Not assigned Then
+                            log("  | >> Previous-task assignment was not resolved. Assessing application ownership.")
+                            assigned = TryAssignFromApplicationOwnership(task, task_definition, process, process_type, assignmentPage)
+                        End If
+                        If Not assigned Then
+                            log("  | >> No eligible role cluster or user portfolio assignment was found for task " & task.id.ToString(CultureInfo.InvariantCulture) & ".")
+                        End If
                     End If
                     count = count + 1
                 End If
@@ -1393,7 +1247,295 @@ Public Class Service1
         Next
     End Sub
 
-    Public Sub PostForm(ByVal forms As List(Of FormValue), ByVal p As module_pages, ByVal dataID As String)
+    Private Function TryAssignFromLastCompletedTask(ByVal taskRow As task,
+                                                    ByVal definition As task_definitions,
+                                                    ByVal processRow As process,
+                                                    ByVal processType As process_types,
+                                                    ByVal assignmentPage As module_pages) As Boolean
+        Try
+            Dim lastTask = db.tasks.
+                Where(Function(value) value.process = taskRow.process AndAlso
+                                      value.id <> taskRow.id AndAlso
+                                      value.status = 4 AndAlso
+                                      Not value.is_deleted AndAlso
+                                      value.assigned_to.HasValue AndAlso
+                                      value.task_definition.HasValue).
+                OrderByDescending(Function(value) value.completion_date).
+                ThenByDescending(Function(value) value.sort_order).
+                ThenByDescending(Function(value) value.id).
+                FirstOrDefault()
+
+            If lastTask Is Nothing Then
+                log("  | >> No completed task with an assignee was found for process " & processRow.id.ToString(CultureInfo.InvariantCulture) & ".")
+                Return False
+            End If
+
+            Dim lastDefinition = db.task_definitions.FirstOrDefault(Function(value) value.id = lastTask.task_definition.Value AndAlso Not value.is_deleted)
+            If lastDefinition Is Nothing Then
+                log("  | >> The last completed task definition could not be loaded.")
+                Return False
+            End If
+
+            Dim currentRole = EffectiveTaskRole(taskRow, definition)
+            Dim lastRole = EffectiveTaskRole(lastTask, lastDefinition)
+            If Not currentRole.HasValue OrElse Not lastRole.HasValue Then
+                log("  | >> The current or previous task role is not configured.")
+                Return False
+            End If
+
+            If currentRole.Value = lastRole.Value Then
+                Return AssignAutoTask(taskRow, lastTask.assigned_to.Value, assignmentPage, "last completed task user for the same role")
+            End If
+
+            Dim assigningType = (processType.assigning_type & String.Empty).Trim()
+            If assigningType.Equals("User Cluster", StringComparison.OrdinalIgnoreCase) Then
+                Dim cluster = FindRoleClusterForPreviousUser(processRow, lastRole.Value, lastTask.assigned_to.Value)
+                If cluster IsNot Nothing Then
+                    If cluster.next_cluster.HasValue Then
+                        Dim nextCluster = db.role_clusters.FirstOrDefault(Function(value) value.id = cluster.next_cluster.Value AndAlso Not value.is_deleted)
+                        If nextCluster IsNot Nothing AndAlso nextCluster.role = currentRole AndAlso RoleClusterMatchesApplication(nextCluster, processRow) Then
+                            Dim nextUser = SelectRoleClusterUser(nextCluster, taskRow)
+                            If nextUser.HasValue AndAlso AssignAutoTask(taskRow, nextUser.Value, assignmentPage, "next role cluster from the last completed task") Then Return True
+                        End If
+                    End If
+                    If processType.supervisory_role = currentRole AndAlso cluster.cluster_supervisor.HasValue Then
+                        If AssignAutoTask(taskRow, cluster.cluster_supervisor.Value, assignmentPage, "supervisor of the last completed task role cluster") Then Return True
+                    End If
+                End If
+            ElseIf assigningType.Equals("User Portfolio", StringComparison.OrdinalIgnoreCase) Then
+                Dim portfolio = FindPortfolioForPreviousUser(processRow, lastRole.Value, lastTask.assigned_to.Value)
+                If portfolio IsNot Nothing AndAlso processType.supervisory_role = currentRole AndAlso portfolio.portfolio_supervisor.HasValue Then
+                    If AssignAutoTask(taskRow, portfolio.portfolio_supervisor.Value, assignmentPage, "supervisor of the last completed task user portfolio") Then Return True
+                End If
+            End If
+
+            log("  | >> Last completed task " & lastTask.id.ToString(CultureInfo.InvariantCulture) & " did not determine an assignee for role " & currentRole.Value.ToString(CultureInfo.InvariantCulture) & ".")
+            Return False
+        Catch ex As Exception
+            log("  | >> Previous-task assignment failed: " & ex.Message)
+            log(ex.StackTrace)
+            Return False
+        End Try
+    End Function
+
+    Private Function TryAssignFromApplicationOwnership(ByVal taskRow As task,
+                                                       ByVal definition As task_definitions,
+                                                       ByVal processRow As process,
+                                                       ByVal processType As process_types,
+                                                       ByVal assignmentPage As module_pages) As Boolean
+        Try
+            Dim assigningType = (processType.assigning_type & String.Empty).Trim()
+            If assigningType.Equals("User Cluster", StringComparison.OrdinalIgnoreCase) Then
+                log("  | >> Resolving application ownership through role clusters.")
+                If TryAssignFromRoleCluster(taskRow, definition, processRow, assignmentPage) Then Return True
+                log("  | >> No role-cluster assignment was resolved; checking user portfolios.")
+                Return TryAssignFromUserPortfolio(taskRow, definition, processRow, assignmentPage)
+            End If
+            If assigningType.Equals("User Portfolio", StringComparison.OrdinalIgnoreCase) Then
+                log("  | >> Resolving application ownership through user portfolios.")
+                If TryAssignFromUserPortfolio(taskRow, definition, processRow, assignmentPage) Then Return True
+                log("  | >> No user-portfolio assignment was resolved; checking role clusters.")
+                Return TryAssignFromRoleCluster(taskRow, definition, processRow, assignmentPage)
+            End If
+
+            log("  | >> Assigning type is not configured; checking role clusters, then user portfolios.")
+            If TryAssignFromRoleCluster(taskRow, definition, processRow, assignmentPage) Then Return True
+            Return TryAssignFromUserPortfolio(taskRow, definition, processRow, assignmentPage)
+        Catch ex As Exception
+            log("  | >> Application ownership assignment failed: " & ex.Message)
+            log(ex.StackTrace)
+            Return False
+        End Try
+    End Function
+
+    Private Function TryAssignFromRoleCluster(ByVal taskRow As task,
+                                              ByVal definition As task_definitions,
+                                              ByVal processRow As process,
+                                              ByVal assignmentPage As module_pages) As Boolean
+        Dim roleId = EffectiveTaskRole(taskRow, definition)
+        Dim divisionId = ProcessDivisionId(processRow)
+        If Not roleId.HasValue OrElse Not divisionId.HasValue OrElse Not processRow.entity_type.HasValue Then
+            log("  | >> Role-cluster fallback requires task role, process division, and entity type.")
+            Return False
+        End If
+
+        Dim today = Date.Today
+        Dim clusters = db.role_clusters.
+            Where(Function(value) Not value.is_deleted AndAlso value.role = roleId.Value AndAlso value.division = divisionId.Value).
+            ToList().
+            Where(Function(value) (Not value.start_date.HasValue OrElse value.start_date.Value.Date <= today) AndAlso
+                                   (Not value.end_date.HasValue OrElse value.end_date.Value.Date >= today) AndAlso
+                                   CsvContains(value.entity_groups, processRow.entity_type.Value)).
+            OrderBy(Function(value) ParseCsvIds(value.entity_groups).Count).
+            ThenBy(Function(value) value.id).
+            ToList()
+
+        For Each cluster In clusters
+            Dim userId = SelectRoleClusterUser(cluster, taskRow)
+            If userId.HasValue Then
+                log("  | >> Application matched role cluster: " & cluster.cluster_name)
+                If AssignAutoTask(taskRow, userId.Value, assignmentPage, "application role cluster " & cluster.cluster_name) Then Return True
+            End If
+        Next
+
+        log("  | >> No active role cluster matched division " & divisionId.Value.ToString(CultureInfo.InvariantCulture) & ", role " & roleId.Value.ToString(CultureInfo.InvariantCulture) & ", and entity type " & processRow.entity_type.Value.ToString(CultureInfo.InvariantCulture) & ".")
+        Return False
+    End Function
+
+    Private Function TryAssignFromUserPortfolio(ByVal taskRow As task,
+                                                ByVal definition As task_definitions,
+                                                ByVal processRow As process,
+                                                ByVal assignmentPage As module_pages) As Boolean
+        Dim roleId = EffectiveTaskRole(taskRow, definition)
+        Dim divisionId = ProcessDivisionId(processRow)
+        If Not roleId.HasValue OrElse Not divisionId.HasValue OrElse Not processRow.entity.HasValue Then
+            log("  | >> User-portfolio fallback requires task role, process division, and entity.")
+            Return False
+        End If
+
+        Dim portfolios = db.user_portfolios.
+            Where(Function(value) Not value.is_deleted AndAlso value.status = True AndAlso value.portfolio_role = roleId.Value AndAlso value.division = divisionId.Value).
+            ToList().
+            Where(Function(value) value.entity = processRow.entity OrElse CsvContains(value.portfolio_entities, processRow.entity.Value)).
+            OrderByDescending(Function(value) value.entity.HasValue AndAlso value.entity.Value = processRow.entity.Value).
+            ThenBy(Function(value) value.id).
+            ToList()
+
+        For Each portfolio In portfolios
+            Dim userId As Nullable(Of Long) = Nothing
+            If portfolio.portfolio_user.HasValue AndAlso IsAssignableUser(portfolio.portfolio_user.Value) Then
+                userId = portfolio.portfolio_user.Value
+            ElseIf portfolio.portfolio_supervisor.HasValue AndAlso IsAssignableUser(portfolio.portfolio_supervisor.Value) Then
+                userId = portfolio.portfolio_supervisor.Value
+            End If
+            If userId.HasValue Then
+                log("  | >> Application matched user portfolio: " & portfolio.portfolio_name)
+                If AssignAutoTask(taskRow, userId.Value, assignmentPage, "application user portfolio " & portfolio.portfolio_name) Then Return True
+            End If
+        Next
+
+        log("  | >> No active user portfolio matched division " & divisionId.Value.ToString(CultureInfo.InvariantCulture) & ", role " & roleId.Value.ToString(CultureInfo.InvariantCulture) & ", and entity " & processRow.entity.Value.ToString(CultureInfo.InvariantCulture) & ".")
+        Return False
+    End Function
+
+    Private Function FindRoleClusterForPreviousUser(ByVal processRow As process, ByVal roleId As Long, ByVal userId As Long) As role_clusters
+        Dim divisionId = ProcessDivisionId(processRow)
+        If Not divisionId.HasValue OrElse Not processRow.entity_type.HasValue Then Return Nothing
+        Dim today = Date.Today
+        Return db.role_clusters.
+            Where(Function(value) Not value.is_deleted AndAlso value.role = roleId AndAlso value.division = divisionId.Value).
+            OrderBy(Function(value) value.id).
+            ToList().
+            FirstOrDefault(Function(value) (Not value.start_date.HasValue OrElse value.start_date.Value.Date <= today) AndAlso
+                                           (Not value.end_date.HasValue OrElse value.end_date.Value.Date >= today) AndAlso
+                                           CsvContains(value.entity_groups, processRow.entity_type.Value) AndAlso
+                                           (CsvContains(value.cluster_users, userId) OrElse CsvContains(value.cluster_alternative_users, userId) OrElse value.cluster_supervisor = userId))
+    End Function
+
+    Private Function FindPortfolioForPreviousUser(ByVal processRow As process, ByVal roleId As Long, ByVal userId As Long) As user_portfolios
+        Dim divisionId = ProcessDivisionId(processRow)
+        If Not divisionId.HasValue OrElse Not processRow.entity.HasValue Then Return Nothing
+        Return db.user_portfolios.
+            Where(Function(value) Not value.is_deleted AndAlso value.status = True AndAlso value.portfolio_role = roleId AndAlso value.division = divisionId.Value).
+            OrderBy(Function(value) value.id).
+            ToList().
+            FirstOrDefault(Function(value) (value.entity = processRow.entity OrElse CsvContains(value.portfolio_entities, processRow.entity.Value)) AndAlso
+                                           (value.portfolio_user = userId OrElse value.portfolio_supervisor = userId))
+    End Function
+
+    Private Function SelectRoleClusterUser(ByVal cluster As role_clusters, ByVal taskRow As task) As Nullable(Of Long)
+        Dim preferredUsers As New List(Of Long)()
+        Try
+            If taskRow.task_definition.HasValue AndAlso taskRow.process.HasValue Then
+                preferredUsers = db.GetClusterNextTaskDefinitionAgent(taskRow.task_definition.Value, taskRow.process.Value).
+                    Where(Function(value) value.HasValue).
+                    Select(Function(value) value.Value).
+                    Distinct().
+                    ToList()
+            End If
+            If preferredUsers.Count = 0 AndAlso taskRow.task_definition.HasValue Then
+                preferredUsers = db.GetNextTaskDefinitionAgent(taskRow.task_definition.Value).
+                    Where(Function(value) value.HasValue).
+                    Select(Function(value) value.Value).
+                    Distinct().
+                    ToList()
+            End If
+        Catch ex As Exception
+            log("  | >> Workload candidate lookup failed for task " & taskRow.id.ToString(CultureInfo.InvariantCulture) & ": " & ex.Message)
+        End Try
+
+        Dim primaryUsers = ParseCsvIds(cluster.cluster_users)
+        Dim alternativeUsers = ParseCsvIds(cluster.cluster_alternative_users)
+        For Each userId In preferredUsers
+            If primaryUsers.Contains(userId) AndAlso IsAssignableUser(userId) Then Return userId
+        Next
+        For Each userId In primaryUsers
+            If IsAssignableUser(userId) Then Return userId
+        Next
+        For Each userId In preferredUsers
+            If alternativeUsers.Contains(userId) AndAlso IsAssignableUser(userId) Then Return userId
+        Next
+        For Each userId In alternativeUsers
+            If IsAssignableUser(userId) Then Return userId
+        Next
+        If cluster.cluster_supervisor.HasValue AndAlso IsAssignableUser(cluster.cluster_supervisor.Value) Then Return cluster.cluster_supervisor.Value
+        Return Nothing
+    End Function
+
+    Private Function RoleClusterMatchesApplication(ByVal cluster As role_clusters, ByVal processRow As process) As Boolean
+        Dim divisionId = ProcessDivisionId(processRow)
+        Return divisionId.HasValue AndAlso processRow.entity_type.HasValue AndAlso
+               cluster.division = divisionId.Value AndAlso
+               CsvContains(cluster.entity_groups, processRow.entity_type.Value)
+    End Function
+
+    Private Function EffectiveTaskRole(ByVal taskRow As task, ByVal definition As task_definitions) As Nullable(Of Long)
+        If taskRow.role.HasValue Then Return taskRow.role
+        If definition IsNot Nothing Then Return definition.role
+        Return Nothing
+    End Function
+
+    Private Function ProcessDivisionId(ByVal processRow As process) As Nullable(Of Long)
+        Dim divisionId As Long
+        If Long.TryParse((processRow.division & String.Empty).Trim(), divisionId) AndAlso divisionId > 0 Then Return divisionId
+        Return Nothing
+    End Function
+
+    Private Function ParseCsvIds(ByVal value As String) As List(Of Long)
+        Dim result As New List(Of Long)()
+        For Each token In (value & String.Empty).Split(New Char() {","c, ";"c}, StringSplitOptions.RemoveEmptyEntries)
+            Dim parsed As Long
+            If Long.TryParse(token.Trim(), parsed) AndAlso parsed > 0 AndAlso Not result.Contains(parsed) Then result.Add(parsed)
+        Next
+        Return result
+    End Function
+
+    Private Function CsvContains(ByVal value As String, ByVal expectedId As Long) As Boolean
+        Return ParseCsvIds(value).Contains(expectedId)
+    End Function
+
+    Private Function IsAssignableUser(ByVal userId As Long) As Boolean
+        Return userId > 0 AndAlso db.users.Any(Function(value) value.id = userId AndAlso Not value.is_deleted)
+    End Function
+
+    Private Function AssignAutoTask(ByVal taskRow As task, ByVal userId As Long, ByVal assignmentPage As module_pages, ByVal source As String) As Boolean
+        Dim agent = db.users.FirstOrDefault(Function(value) value.id = userId AndAlso Not value.is_deleted)
+        If agent Is Nothing Then
+            log("  | >> Assignment candidate " & userId.ToString(CultureInfo.InvariantCulture) & " is not an active user.")
+            Return False
+        End If
+
+        log("  | >> Next Agent: (" & agent.username & ") via " & source)
+        Dim form As New List(Of FormValue) From {
+            New FormValue("description_of_activity", ""),
+            New FormValue("assigned_to", agent.id),
+            New FormValue("cc_agents", ""),
+            New FormValue("priority", "2")
+        }
+        Return PostForm(form, assignmentPage, taskRow.id.ToString(CultureInfo.InvariantCulture))
+    End Function
+
+    Public Function PostForm(ByVal forms As List(Of FormValue), ByVal p As module_pages, ByVal dataID As String) As Boolean
         Try
 
             Dim vs As New List(Of String)
@@ -1412,12 +1554,14 @@ Public Class Service1
             log("")
             log("")
             SubmitForm(param)
+            Return True
         Catch ex As Exception
             log("      ---- Error: ")
             log("      ---- Error: " & ex.Message)
+            Return False
         End Try
 
-    End Sub
+    End Function
 
     Private Sub SubmitForm(parameters As IDictionary(Of String, String))
         Dim postData As Byte()
