@@ -1,0 +1,1013 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BusinessSuiteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="comment">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="comment_by" Type="Int64" />
+    <Property Name="task" Type="Int64" />
+    <Property Name="comment_date" Type="DateTime" Precision="3" />
+    <Property Name="comment1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+  </EntityType>
+  <EntityType Name="control_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="template" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="module_items" Relationship="Self.FK_module_items_control_types" FromRole="control_types" ToRole="module_items" />
+    <NavigationProperty Name="module_page_items" Relationship="Self.FK_module_page_items_control_types" FromRole="control_types" ToRole="module_page_items" />
+  </EntityType>
+  <EntityType Name="data_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="vb_code" Type="Int32" />
+    <NavigationProperty Name="module_items" Relationship="Self.FK_module_items_data_types" FromRole="data_types" ToRole="module_items" />
+  </EntityType>
+  <EntityType Name="file">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="module" Type="Int64" />
+    <Property Name="data" Type="Int64" />
+    <Property Name="filename" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="content_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="content_length" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="content" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="module_items">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="module_id" Type="Int64" />
+    <Property Name="control_type_id" Type="Int64" />
+    <Property Name="data_type_id" Type="Int64" />
+    <Property Name="sort_order" Type="Int32" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="placeholder" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="help" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="slug" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="icon" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="style" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="default_value" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="validation" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="readonly" Type="Boolean" Nullable="false" />
+    <Property Name="disabled" Type="Boolean" Nullable="false" />
+    <Property Name="dataenum" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="datatable" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="database_column" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="foreign_module_id" Type="Int64" />
+    <Property Name="length" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="where_query" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="parsable" Type="Boolean" Nullable="false" />
+    <Property Name="data_source" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="display_condition" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="control_types" Relationship="Self.FK_module_items_control_types" FromRole="module_items" ToRole="control_types" />
+    <NavigationProperty Name="data_types" Relationship="Self.FK_module_items_data_types" FromRole="module_items" ToRole="data_types" />
+    <NavigationProperty Name="module" Relationship="Self.FK_module_items_modules" FromRole="module_items" ToRole="modules" />
+    <NavigationProperty Name="module1" Relationship="Self.FK_module_items_modules1" FromRole="module_items" ToRole="modules" />
+    <NavigationProperty Name="module_page_items" Relationship="Self.FK_module_page_items_module_items" FromRole="module_items" ToRole="module_page_items" />
+  </EntityType>
+  <EntityType Name="module_page_items">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="module_page_id" Type="Int64" />
+    <Property Name="module_item_id" Type="Int64" />
+    <Property Name="control_type_id" Type="Int64" />
+    <Property Name="row" Type="Int32" />
+    <Property Name="col" Type="Int32" />
+    <Property Name="rowspan" Type="Int32" />
+    <Property Name="colspan" Type="Int32" />
+    <Property Name="placeholder" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="help" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="slug" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="icon" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="style" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="default_value" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="validation" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="width" Type="Int32" />
+    <Property Name="height" Type="Int32" />
+    <Property Name="readonly" Type="Boolean" Nullable="false" />
+    <Property Name="disabled" Type="Boolean" Nullable="false" />
+    <Property Name="is_show" Type="Boolean" Nullable="false" />
+    <Property Name="show_options" Type="Boolean" Nullable="false" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="where_query" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="module_page" Type="Int64" />
+    <Property Name="display_condition" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="control_types" Relationship="Self.FK_module_page_items_control_types" FromRole="module_page_items" ToRole="control_types" />
+    <NavigationProperty Name="module_items" Relationship="Self.FK_module_page_items_module_items" FromRole="module_page_items" ToRole="module_items" />
+    <NavigationProperty Name="module_pages" Relationship="Self.FK_module_page_items_module_pages" FromRole="module_page_items" ToRole="module_pages" />
+    <NavigationProperty Name="module_pages1" Relationship="Self.FK_module_page_items_module_pages1" FromRole="module_page_items" ToRole="module_pages" />
+  </EntityType>
+  <EntityType Name="module_pages">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="module_id" Type="Int64" />
+    <Property Name="page_type_id" Type="Int64" />
+    <Property Name="parent_page_id" Type="Int64" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="layout" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="permissions" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="add_page" Type="Int64" />
+    <Property Name="edit_page" Type="Int64" />
+    <Property Name="show_page" Type="Int64" />
+    <Property Name="where_query" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="insert_trigger" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="update_trigger" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="delete_trigger" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="label" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="icon" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="style" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="condition" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="hide_until_search" Type="Boolean" />
+    <NavigationProperty Name="module_page_items" Relationship="Self.FK_module_page_items_module_pages" FromRole="module_pages" ToRole="module_page_items" />
+    <NavigationProperty Name="module_page_items1" Relationship="Self.FK_module_page_items_module_pages1" FromRole="module_pages" ToRole="module_page_items" />
+    <NavigationProperty Name="module_pages1" Relationship="Self.FK_module_pages_module_pages" FromRole="module_pages" ToRole="module_pages1" />
+    <NavigationProperty Name="module_pages2" Relationship="Self.FK_module_pages_module_pages" FromRole="module_pages1" ToRole="module_pages" />
+    <NavigationProperty Name="module_pages11" Relationship="Self.FK_module_pages_module_pages1" FromRole="module_pages" ToRole="module_pages1" />
+    <NavigationProperty Name="module_pages3" Relationship="Self.FK_module_pages_module_pages1" FromRole="module_pages1" ToRole="module_pages" />
+    <NavigationProperty Name="module_pages12" Relationship="Self.FK_module_pages_module_pages2" FromRole="module_pages" ToRole="module_pages1" />
+    <NavigationProperty Name="module_pages4" Relationship="Self.FK_module_pages_module_pages2" FromRole="module_pages1" ToRole="module_pages" />
+    <NavigationProperty Name="module_pages13" Relationship="Self.FK_module_pages_module_pages3" FromRole="module_pages" ToRole="module_pages1" />
+    <NavigationProperty Name="module_pages5" Relationship="Self.FK_module_pages_module_pages3" FromRole="module_pages1" ToRole="module_pages" />
+    <NavigationProperty Name="module" Relationship="Self.FK_module_pages_modules" FromRole="module_pages" ToRole="modules" />
+    <NavigationProperty Name="page_types" Relationship="Self.FK_module_pages_page_types" FromRole="module_pages" ToRole="page_types" />
+    <Property Name="sort_order" Type="Int32" Nullable="false" />
+    <Property Name="page_query" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="page_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="module_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="module_type_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="modules" Relationship="Self.FK_modules_module_types" FromRole="module_types" ToRole="modules" />
+  </EntityType>
+  <EntityType Name="module">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="parent_module_id" Type="Int64" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="module_type_id" Type="Int64" />
+    <Property Name="page_title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="page_subtitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="slug" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="icon" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="is_active" Type="Boolean" Nullable="false" />
+    <Property Name="sort_order" Type="Int32" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="database_table" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="alias" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="is_show" Type="Boolean" Nullable="false" />
+    <Property Name="permissions" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="insert_email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="update_email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="delete_email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="url" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="data_source" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="module_items" Relationship="Self.FK_module_items_modules" FromRole="modules" ToRole="module_items" />
+    <NavigationProperty Name="module_items1" Relationship="Self.FK_module_items_modules1" FromRole="modules" ToRole="module_items" />
+    <NavigationProperty Name="module_pages" Relationship="Self.FK_module_pages_modules" FromRole="modules" ToRole="module_pages" />
+    <NavigationProperty Name="module_types" Relationship="Self.FK_modules_module_types" FromRole="modules" ToRole="module_types" />
+  </EntityType>
+  <EntityType Name="page_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="is_required" Type="Boolean" Nullable="false" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="layout" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="module_pages" Relationship="Self.FK_module_pages_page_types" FromRole="page_types" ToRole="module_pages" />
+  </EntityType>
+  <EntityType Name="process_definitions">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="reference_prefix" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="reference_counter" Type="Int32" />
+    <Property Name="form_type" Type="Int64" />
+    <Property Name="slc" Type="Int32" />
+    <Property Name="division" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="custom_fields" Type="Int64" />
+    <Property Name="assigning_role" Type="Int64" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="analyst_role" Type="Int64" />
+    <Property Name="condition_items" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="slc_specific_by" Type="Int32" />
+    <Property Name="submission_start_from" Type="DateTime" Precision="0" />
+    <Property Name="active" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="process_status">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="icon" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="border_style" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+  </EntityType>
+  <EntityType Name="task_definitions">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="process_definition" Type="Int64" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="sort_order" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="slc" Type="Int32" />
+    <Property Name="slc_type" Type="Int64" />
+    <Property Name="role" Type="Int64" />
+    <Property Name="pre_requsite_task" Type="Int64" />
+    <Property Name="priority" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="custom_fields" Type="Int64" />
+    <Property Name="task_type" Type="Int64" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="process_types" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="have_condition" Type="Boolean" />
+    <Property Name="condition" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK_module_items_control_types">
+    <End Role="control_types" Type="Self.control_types" Multiplicity="0..1" />
+    <End Role="module_items" Type="Self.module_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="control_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_items">
+        <PropertyRef Name="control_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_page_items_control_types">
+    <End Role="control_types" Type="Self.control_types" Multiplicity="0..1" />
+    <End Role="module_page_items" Type="Self.module_page_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="control_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_page_items">
+        <PropertyRef Name="control_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_items_data_types">
+    <End Role="data_types" Type="Self.data_types" Multiplicity="0..1" />
+    <End Role="module_items" Type="Self.module_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="data_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_items">
+        <PropertyRef Name="data_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_items_modules">
+    <End Role="modules" Type="Self.module" Multiplicity="0..1" />
+    <End Role="module_items" Type="Self.module_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="modules">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_items">
+        <PropertyRef Name="module_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_items_modules1">
+    <End Role="modules" Type="Self.module" Multiplicity="0..1" />
+    <End Role="module_items" Type="Self.module_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="modules">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_items">
+        <PropertyRef Name="foreign_module_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_page_items_module_items">
+    <End Role="module_items" Type="Self.module_items" Multiplicity="0..1" />
+    <End Role="module_page_items" Type="Self.module_page_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_items">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_page_items">
+        <PropertyRef Name="module_item_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_page_items_module_pages">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_page_items" Type="Self.module_page_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_page_items">
+        <PropertyRef Name="module_page_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_page_items_module_pages1">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_page_items" Type="Self.module_page_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_page_items">
+        <PropertyRef Name="module_page" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_module_pages">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_pages1" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages1">
+        <PropertyRef Name="edit_page" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_module_pages1">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_pages1" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages1">
+        <PropertyRef Name="parent_page_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_module_pages2">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_pages1" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages1">
+        <PropertyRef Name="add_page" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_module_pages3">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_pages1" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages1">
+        <PropertyRef Name="show_page" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_modules">
+    <End Role="modules" Type="Self.module" Multiplicity="0..1" />
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="modules">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages">
+        <PropertyRef Name="module_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_page_types">
+    <End Role="page_types" Type="Self.page_types" Multiplicity="0..1" />
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="page_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages">
+        <PropertyRef Name="page_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_modules_module_types">
+    <End Role="module_types" Type="Self.module_types" Multiplicity="0..1" />
+    <End Role="modules" Type="Self.module" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="modules">
+        <PropertyRef Name="module_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BusinessSuiteEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="comments" EntityType="Self.comment" />
+    <EntitySet Name="control_types" EntityType="Self.control_types" />
+    <EntitySet Name="data_types" EntityType="Self.data_types" />
+    <EntitySet Name="files" EntityType="Self.file" />
+    <EntitySet Name="module_items" EntityType="Self.module_items" />
+    <EntitySet Name="module_page_items" EntityType="Self.module_page_items" />
+    <EntitySet Name="module_pages" EntityType="Self.module_pages" />
+    <EntitySet Name="module_types" EntityType="Self.module_types" />
+    <EntitySet Name="modules" EntityType="Self.module" />
+    <EntitySet Name="page_types" EntityType="Self.page_types" />
+    <EntitySet Name="process_definitions" EntityType="Self.process_definitions" />
+    <EntitySet Name="process_status" EntityType="Self.process_status" />
+    <EntitySet Name="task_definitions" EntityType="Self.task_definitions" />
+    <AssociationSet Name="FK_module_items_control_types" Association="Self.FK_module_items_control_types">
+      <End Role="control_types" EntitySet="control_types" />
+      <End Role="module_items" EntitySet="module_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_page_items_control_types" Association="Self.FK_module_page_items_control_types">
+      <End Role="control_types" EntitySet="control_types" />
+      <End Role="module_page_items" EntitySet="module_page_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_items_data_types" Association="Self.FK_module_items_data_types">
+      <End Role="data_types" EntitySet="data_types" />
+      <End Role="module_items" EntitySet="module_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_items_modules" Association="Self.FK_module_items_modules">
+      <End Role="modules" EntitySet="modules" />
+      <End Role="module_items" EntitySet="module_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_items_modules1" Association="Self.FK_module_items_modules1">
+      <End Role="modules" EntitySet="modules" />
+      <End Role="module_items" EntitySet="module_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_page_items_module_items" Association="Self.FK_module_page_items_module_items">
+      <End Role="module_items" EntitySet="module_items" />
+      <End Role="module_page_items" EntitySet="module_page_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_page_items_module_pages" Association="Self.FK_module_page_items_module_pages">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_page_items" EntitySet="module_page_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_page_items_module_pages1" Association="Self.FK_module_page_items_module_pages1">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_page_items" EntitySet="module_page_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_module_pages" Association="Self.FK_module_pages_module_pages">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_pages1" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_module_pages1" Association="Self.FK_module_pages_module_pages1">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_pages1" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_module_pages2" Association="Self.FK_module_pages_module_pages2">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_pages1" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_module_pages3" Association="Self.FK_module_pages_module_pages3">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_pages1" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_modules" Association="Self.FK_module_pages_modules">
+      <End Role="modules" EntitySet="modules" />
+      <End Role="module_pages" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_page_types" Association="Self.FK_module_pages_page_types">
+      <End Role="page_types" EntitySet="page_types" />
+      <End Role="module_pages" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_modules_module_types" Association="Self.FK_modules_module_types">
+      <End Role="module_types" EntitySet="module_types" />
+      <End Role="modules" EntitySet="modules" />
+    </AssociationSet>
+    <FunctionImport Name="GetBusinessSuiteSubmissionPacks" ReturnType="Collection(BusinessSuiteModel.GetBusinessSuiteSubmissionPacks_Result)">
+      <Parameter Name="startDate" Mode="In" Type="DateTime" />
+      <Parameter Name="endDate" Mode="In" Type="DateTime" />
+      <Parameter Name="formset" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="GetBusinessSuiteSubmissionPacks2" ReturnType="Collection(BusinessSuiteModel.GetBusinessSuiteSubmissionPacks2_Result)">
+      <Parameter Name="startDate" Mode="In" Type="DateTime" />
+      <Parameter Name="endDate" Mode="In" Type="DateTime" />
+      <Parameter Name="formset" Mode="In" Type="String" />
+      <Parameter Name="group" Mode="In" Type="Int64" />
+    </FunctionImport>
+    <FunctionImport Name="UpdateEntities" />
+    <EntitySet Name="entity_types" EntityType="BusinessSuiteModel.entity_types" />
+    <EntitySet Name="form_types" EntityType="BusinessSuiteModel.form_types" />
+    <FunctionImport Name="GetAllEntities" ReturnType="Collection(BusinessSuiteModel.GetAllEntities_Result)" />
+    <FunctionImport Name="GetClusterNextTaskDefinitionAgent" ReturnType="Collection(Int64)">
+      <Parameter Name="task_definition" Mode="In" Type="Int64" />
+      <Parameter Name="process" Mode="In" Type="Int64" />
+    </FunctionImport>
+    <FunctionImport Name="GetUnassignedTaskList" ReturnType="Collection(Int64)" />
+    <FunctionImport Name="GetUnassignedTasks" ReturnType="Collection(BusinessSuiteModel.GetUnassignedTasks_Result)" />
+    <EntitySet Name="role_clusters" EntityType="BusinessSuiteModel.role_clusters" />
+    <FunctionImport Name="GetNextTaskDefinitionAgent" ReturnType="Collection(Int64)">
+      <Parameter Name="task_definition" Mode="In" Type="Int64" />
+    </FunctionImport>
+    <EntitySet Name="users" EntityType="BusinessSuiteModel.user" />
+    <EntitySet Name="tasks" EntityType="BusinessSuiteModel.task" />
+    <EntitySet Name="task_log" EntityType="BusinessSuiteModel.task_log" />
+    <EntitySet Name="public_holidays" EntityType="BusinessSuiteModel.public_holidays" />
+    <EntitySet Name="processes" EntityType="BusinessSuiteModel.process" />
+    <EntitySet Name="application_allocations" EntityType="BusinessSuiteModel.application_allocations" />
+    <EntitySet Name="process_types" EntityType="BusinessSuiteModel.process_types" />
+    <EntitySet Name="entities" EntityType="BusinessSuiteModel.entity" />
+    <EntitySet Name="user_portfolios" EntityType="BusinessSuiteModel.user_portfolios" />
+  </EntityContainer>
+  <ComplexType Name="GetBusinessSuiteSubmissionPacks_Result">
+    <Property Type="Int32" Name="entity_instance_id" Nullable="true" />
+    <Property Type="Int32" Name="group_id" Nullable="true" />
+    <Property Type="DateTime" Name="state_last_changed_on" Nullable="true" Precision="23" />
+    <Property Type="String" Name="reference" Nullable="true" MaxLength="250" />
+    <Property Type="String" Name="submission_pack_name" Nullable="true" MaxLength="250" />
+    <Property Type="DateTime" Name="end_date" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="created_on" Nullable="true" Precision="23" />
+    <Property Type="String" Name="action_performed" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="submitted_on" Nullable="true" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="GetBusinessSuiteSubmissionPacks2_Result">
+    <Property Type="Int32" Name="entity_instance_id" Nullable="true" />
+    <Property Type="Int32" Name="group_id" Nullable="true" />
+    <Property Type="DateTime" Name="state_last_changed_on" Nullable="true" Precision="23" />
+    <Property Type="String" Name="reference" Nullable="true" MaxLength="250" />
+    <Property Type="String" Name="submission_pack_name" Nullable="true" MaxLength="250" />
+    <Property Type="DateTime" Name="end_date" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="created_on" Nullable="true" Precision="23" />
+    <Property Type="String" Name="action_performed" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="submitted_on" Nullable="true" Precision="23" />
+  </ComplexType>
+  <EntityType Name="entity_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="code" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="entity_group_id" Type="Int64" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="entity_firm_id" Type="Int64" />
+  </EntityType>
+  <EntityType Name="form_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="form_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="form_type_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="form_attributes" Type="Int64" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+  </EntityType>
+  <ComplexType Name="GetAllEntities_Result">
+    <Property Type="String" Name="Fund_Name" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="License_Number" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Financial_Year_End" Nullable="true" MaxLength="23" />
+    <Property Type="String" Name="Principal_Officer" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="Principal_Officer_Email" Nullable="false" MaxLength="4000" />
+    <Property Type="String" Name="Principal_Officer_Tel" Nullable="false" MaxLength="4000" />
+    <Property Type="Int32" Name="entity_instance_id" Nullable="false" />
+    <Property Type="String" Name="item_registrationdate" Nullable="true" MaxLength="23" />
+    <Property Type="String" Name="address" Nullable="false" MaxLength="4000" />
+    <Property Type="String" Name="Company_Status" Nullable="true" MaxLength="12" />
+    <Property Type="String" Name="reference" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="group_id" Nullable="true" />
+    <Property Type="String" Name="item_deregistrationdate" Nullable="true" MaxLength="23" />
+  </ComplexType>
+  <ComplexType Name="GetUnassignedTasks_Result">
+    <Property Type="Int64" Name="id" Nullable="false" />
+    <Property Type="Int64" Name="task_definition" Nullable="true" />
+    <Property Type="Int64" Name="process" Nullable="true" />
+    <Property Type="String" Name="name" Nullable="true" />
+    <Property Type="String" Name="description_of_the_activity" Nullable="true" />
+    <Property Type="DateTime" Name="created_on" Nullable="true" Precision="23" />
+    <Property Type="Int64" Name="role" Nullable="true" />
+    <Property Type="Int64" Name="assigned_to" Nullable="true" />
+    <Property Type="String" Name="cc_agents" Nullable="true" MaxLength="50" />
+    <Property Type="Int64" Name="next_task_agent" Nullable="true" />
+    <Property Type="Int64" Name="priority" Nullable="true" />
+    <Property Type="DateTime" Name="date_assigned" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="due_date" Nullable="true" />
+    <Property Type="Int64" Name="status" Nullable="true" />
+    <Property Type="DateTime" Name="completion_date" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="days_spent" Nullable="true" />
+    <Property Type="Int64" Name="is_slc_met" Nullable="true" />
+    <Property Type="Int32" Name="exceeding_with" Nullable="true" />
+    <Property Type="Int64" Name="approval_status" Nullable="true" />
+    <Property Type="String" Name="approval_comment" Nullable="true" />
+    <Property Type="Int64" Name="recommendation_status" Nullable="true" />
+    <Property Type="String" Name="recommendation_comment" Nullable="true" />
+    <Property Type="String" Name="comment" Nullable="true" />
+    <Property Type="Int32" Name="sort_order" Nullable="true" />
+    <Property Type="String" Name="note" Nullable="true" />
+    <Property Type="Int64" Name="child_module" Nullable="true" />
+    <Property Type="Int64" Name="child_data" Nullable="true" />
+    <Property Type="Boolean" Name="is_deleted" Nullable="false" />
+    <Property Type="DateTime" Name="date_created" Nullable="false" Precision="23" />
+    <Property Type="Int64" Name="created_by" Nullable="true" />
+    <Property Type="DateTime" Name="date_updated" Nullable="true" Precision="23" />
+    <Property Type="Int64" Name="updated_by" Nullable="true" />
+    <Property Type="Int64" Name="id1" Nullable="false" />
+    <Property Type="Int64" Name="process_definition" Nullable="true" />
+    <Property Type="String" Name="name1" Nullable="true" />
+    <Property Type="Int32" Name="sort_order1" Nullable="true" />
+    <Property Type="String" Name="description" Nullable="true" />
+    <Property Type="Decimal" Name="slc" Nullable="true" Precision="18" Scale="2" />
+    <Property Type="Int64" Name="slc_type" Nullable="true" />
+    <Property Type="Int64" Name="role1" Nullable="true" />
+    <Property Type="Int64" Name="pre_requsite_task" Nullable="true" />
+    <Property Type="String" Name="priority1" Nullable="true" MaxLength="50" />
+    <Property Type="Int64" Name="custom_fields" Nullable="true" />
+    <Property Type="Int64" Name="task_type" Nullable="true" />
+    <Property Type="String" Name="process_types" Nullable="true" />
+    <Property Type="String" Name="note1" Nullable="true" />
+    <Property Type="Int64" Name="child_module1" Nullable="true" />
+    <Property Type="Int64" Name="child_data1" Nullable="true" />
+    <Property Type="Boolean" Name="is_deleted1" Nullable="false" />
+    <Property Type="DateTime" Name="date_created1" Nullable="false" Precision="23" />
+    <Property Type="Int64" Name="created_by1" Nullable="true" />
+    <Property Type="DateTime" Name="date_updated1" Nullable="true" Precision="23" />
+    <Property Type="Int64" Name="updated_by1" Nullable="true" />
+    <Property Type="Int64" Name="id2" Nullable="false" />
+    <Property Type="Int64" Name="process_definition1" Nullable="true" />
+    <Property Type="Int64" Name="entity_type" Nullable="true" />
+    <Property Type="Int64" Name="entity" Nullable="true" />
+    <Property Type="Int64" Name="activity_type" Nullable="true" />
+    <Property Type="String" Name="division" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="name2" Nullable="true" />
+    <Property Type="String" Name="reference" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="description_of_the_activity1" Nullable="true" />
+    <Property Type="String" Name="external_reference" Nullable="true" MaxLength="50" />
+    <Property Type="Int64" Name="current_task" Nullable="true" />
+    <Property Type="Int64" Name="analyst" Nullable="true" />
+    <Property Type="Int64" Name="assigned_to1" Nullable="true" />
+    <Property Type="DateTime" Name="created_on1" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="submitted_on" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="date_assigned1" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="due_date1" Nullable="true" />
+    <Property Type="Int64" Name="statuss" Nullable="true" />
+    <Property Type="DateTime" Name="completion_date1" Nullable="true" Precision="23" />
+    <Property Type="Decimal" Name="slc1" Nullable="true" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="days_spent1" Nullable="true" />
+    <Property Type="Int64" Name="is_slc_met1" Nullable="true" />
+    <Property Type="Int32" Name="exceeding_with1" Nullable="true" />
+    <Property Type="String" Name="contact_person" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="contact_number" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="contact_email_address" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="external_status" Nullable="true" />
+    <Property Type="String" Name="note2" Nullable="true" />
+    <Property Type="Int64" Name="child_module2" Nullable="true" />
+    <Property Type="Int64" Name="child_data2" Nullable="true" />
+    <Property Type="Boolean" Name="is_deleted2" Nullable="false" />
+    <Property Type="DateTime" Name="date_created2" Nullable="false" Precision="23" />
+    <Property Type="Int64" Name="created_by2" Nullable="true" />
+    <Property Type="DateTime" Name="date_updated2" Nullable="true" Precision="23" />
+    <Property Type="Int64" Name="updated_by2" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="role_clusters">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="cluster_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="division" Type="Int64" />
+    <Property Name="role" Type="Int64" />
+    <Property Name="entity_groups" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="cluster_users" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="cluster_supervisor" Type="Int64" />
+    <Property Name="start_date" Type="DateTime" Precision="0" />
+    <Property Name="end_date" Type="DateTime" Precision="0" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="cluster_alternative_users" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="next_cluster" Type="Int64" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="first_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="last_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="telephone" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="email_address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="position" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="employee_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="photo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="profile_photo" Type="Int64" />
+    <Property Name="roles" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="signature" Type="Int64" />
+    <Property Name="is_admin" Type="Int64" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="last_login_in" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="task">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="task_definition" Type="Int64" />
+    <Property Name="process" Type="Int64" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="description_of_the_activity" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="created_on" Type="DateTime" Precision="3" />
+    <Property Name="role" Type="Int64" />
+    <Property Name="assigned_to" Type="Int64" />
+    <Property Name="cc_agents" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="next_task_agent" Type="Int64" />
+    <Property Name="priority" Type="Int64" />
+    <Property Name="date_assigned" Type="DateTime" Precision="3" />
+    <Property Name="due_date" Type="DateTime" Precision="3" />
+    <Property Name="status" Type="Int64" />
+    <Property Name="completion_date" Type="DateTime" Precision="3" />
+    <Property Name="days_spent" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="is_slc_met" Type="Int64" />
+    <Property Name="exceeding_with" Type="Int32" />
+    <Property Name="approval_status" Type="Int64" />
+    <Property Name="approval_comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="recommendation_status" Type="Int64" />
+    <Property Name="recommendation_comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="sort_order" Type="Int32" />
+    <Property Name="decision_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="decision_comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="ers_action" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="ers_action_comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="force_auto_assign" Type="Boolean" />
+    <Property Name="enabled" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="task_log">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="task" Type="Int64" />
+    <Property Name="start_date" Type="DateTime" Precision="3" />
+    <Property Name="completion_date" Type="DateTime" Precision="3" />
+    <Property Name="hours_spent" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="assigned_to" Type="Int64" />
+  </EntityType>
+  <EntityType Name="public_holidays">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="holiday_date" Type="DateTime" Precision="0" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+  </EntityType>
+  <EntityType Name="process">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="process_definition" Type="Int64" />
+    <Property Name="entity_type" Type="Int64" />
+    <Property Name="entity" Type="Int64" />
+    <Property Name="activity_type" Type="Int64" />
+    <Property Name="division" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="reference" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="description_of_the_activity" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="external_reference" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="current_task" Type="Int64" />
+    <Property Name="analyst" Type="Int64" />
+    <Property Name="assigned_to" Type="Int64" />
+    <Property Name="created_on" Type="DateTime" Precision="3" />
+    <Property Name="submitted_on" Type="DateTime" Precision="3" />
+    <Property Name="date_assigned" Type="DateTime" Precision="3" />
+    <Property Name="due_date" Type="DateTime" Precision="3" />
+    <Property Name="statuss" Type="Int64" />
+    <Property Name="completion_date" Type="DateTime" Precision="3" />
+    <Property Name="slc" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="days_spent" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="is_slc_met" Type="Int64" />
+    <Property Name="exceeding_with" Type="Int32" />
+    <Property Name="contact_person" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="contact_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="contact_email_address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="external_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="shared_folder" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+  </EntityType>
+  <EntityType Name="application_allocations">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="analyst" Type="Int64" />
+    <Property Name="username" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="application" Type="Int64" />
+    <Property Name="date_allocated" Type="DateTime" Precision="3" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="enabled" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="process_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="slc" Type="Int32" />
+    <Property Name="division" Type="Int64" />
+    <Property Name="attributes" Type="Int64" />
+    <Property Name="form_type" Type="Int64" />
+    <Property Name="process_definition" Type="Int64" />
+    <Property Name="entity_group" Type="Int64" />
+    <Property Name="completion_task" Type="Int64" />
+    <Property Name="assigning_role" Type="Int64" />
+    <Property Name="supervisory_role" Type="Int64" />
+    <Property Name="enable_auto_assign" Type="Boolean" />
+    <Property Name="condition" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+    <Property Name="assigning_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="entity">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="license_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="entity_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="entity_group" Type="Int64" />
+    <Property Name="entity_group_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="financial_year_end" Type="DateTime" Precision="0" />
+    <Property Name="principal_officer_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="principal_officer_contact" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="principal_officer_email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="physical_address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="postal_address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="registration_date" Type="DateTime" Precision="0" />
+    <Property Name="de_registration_date" Type="DateTime" Precision="0" />
+    <Property Name="entity_instance_id" Type="Int64" />
+    <Property Name="annual_renewal_date" Type="DateTime" Precision="0" />
+    <Property Name="license_expriy_date" Type="DateTime" Precision="0" />
+    <Property Name="expiry_flag" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="last_renewal_form_end_date" Type="DateTime" Precision="0" />
+    <Property Name="last_renewal_form_ers_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="last_renewal_form_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+  </EntityType>
+  <EntityType Name="user_portfolios">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="portfolio_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="division" Type="Int64" />
+    <Property Name="portfolio_role" Type="Int64" />
+    <Property Name="portfolio_user" Type="Int64" />
+    <Property Name="portfolio_supervisor" Type="Int64" />
+    <Property Name="portfolio_entities" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="entity" Type="Int64" />
+    <Property Name="status" Type="Boolean" />
+    <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="child_module" Type="Int64" />
+    <Property Name="child_data" Type="Int64" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="created_by" Type="Int64" />
+    <Property Name="date_updated" Type="DateTime" Precision="3" />
+    <Property Name="updated_by" Type="Int64" />
+  </EntityType>
+</Schema>

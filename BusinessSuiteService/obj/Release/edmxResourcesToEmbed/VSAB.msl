@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="VSABModelStoreContainer" CdmEntityContainer="VSABEntities">
+    <EntitySetMapping Name="entity_instance">
+      <EntityTypeMapping TypeName="VSABModel.entity_instance">
+        <MappingFragment StoreEntitySet="entity_instance">
+          <ScalarProperty Name="entity_instance_id" ColumnName="entity_instance_id" />
+          <ScalarProperty Name="entity_type_id" ColumnName="entity_type_id" />
+          <ScalarProperty Name="reference" ColumnName="reference" />
+          <ScalarProperty Name="entity_deleted" ColumnName="entity_deleted" />
+          <ScalarProperty Name="state_id" ColumnName="state_id" />
+          <ScalarProperty Name="type_id" ColumnName="type_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="entity_instance_translation">
+      <EntityTypeMapping TypeName="VSABModel.entity_instance_translation">
+        <MappingFragment StoreEntitySet="entity_instance_translation">
+          <ScalarProperty Name="translation_id" ColumnName="translation_id" />
+          <ScalarProperty Name="entity_instance_id" ColumnName="entity_instance_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="language" ColumnName="language" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="submission_pack_instances">
+      <EntityTypeMapping TypeName="VSABModel.submission_pack_instances">
+        <MappingFragment StoreEntitySet="submission_pack_instances">
+          <ScalarProperty Name="submission_pack_instance_id" ColumnName="submission_pack_instance_id" />
+          <ScalarProperty Name="reference" ColumnName="reference" />
+          <ScalarProperty Name="created_on" ColumnName="created_on" />
+          <ScalarProperty Name="end_date" ColumnName="end_date" />
+          <ScalarProperty Name="current_version_major" ColumnName="current_version_major" />
+          <ScalarProperty Name="current_version_minor" ColumnName="current_version_minor" />
+          <ScalarProperty Name="entity_instance_id" ColumnName="entity_instance_id" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="submission_pack_translation">
+      <EntityTypeMapping TypeName="VSABModel.submission_pack_translation">
+        <MappingFragment StoreEntitySet="submission_pack_translation">
+          <ScalarProperty Name="translation_id" ColumnName="translation_id" />
+          <ScalarProperty Name="submission_pack_instance_id" ColumnName="submission_pack_instance_id" />
+          <ScalarProperty Name="language" ColumnName="language" />
+          <ScalarProperty Name="submission_pack_name" ColumnName="submission_pack_name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="submission_pack_versions">
+      <EntityTypeMapping TypeName="VSABModel.submission_pack_versions">
+        <MappingFragment StoreEntitySet="submission_pack_versions">
+          <ScalarProperty Name="submission_pack_version_id" ColumnName="submission_pack_version_id" />
+          <ScalarProperty Name="submission_pack_instance_id" ColumnName="submission_pack_instance_id" />
+          <ScalarProperty Name="version_no_major" ColumnName="version_no_major" />
+          <ScalarProperty Name="version_no_minor" ColumnName="version_no_minor" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="created_on" ColumnName="created_on" />
+          <ScalarProperty Name="last_updated_on" ColumnName="last_updated_on" />
+          <ScalarProperty Name="due_date" ColumnName="due_date" />
+          <ScalarProperty Name="action_performed" ColumnName="action_performed" />
+          <ScalarProperty Name="action_performed_on" ColumnName="action_performed_on" />
+          <ScalarProperty Name="state_id" ColumnName="state_id" />
+          <ScalarProperty Name="state_last_changed_on" ColumnName="state_last_changed_on" />
+          <ScalarProperty Name="has_warnings" ColumnName="has_warnings" />
+          <ScalarProperty Name="submitted_by" ColumnName="submitted_by" />
+          <ScalarProperty Name="submitted_on" ColumnName="submitted_on" />
+          <ScalarProperty Name="has_errors" ColumnName="has_errors" />
+          <ScalarProperty Name="last_saved" ColumnName="last_saved" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

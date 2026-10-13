@@ -1,0 +1,13 @@
+﻿Installing assembly 'C:\NAMFISA\BusinessSuiteService\BusinessSuiteService\bin\Debug\BusinessSuiteService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\NAMFISA\BusinessSuiteService\BusinessSuiteService\bin\Debug\BusinessSuiteService.exe
+   logfile = C:\NAMFISA\BusinessSuiteService\BusinessSuiteService\bin\Debug\BusinessSuiteService.InstallLog
+Installing service BusinessSuiteService...
+Service BusinessSuiteService has been successfully installed.
+Creating EventLog source BusinessSuiteService in log Application...
+Committing assembly 'C:\NAMFISA\BusinessSuiteService\BusinessSuiteService\bin\Debug\BusinessSuiteService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\NAMFISA\BusinessSuiteService\BusinessSuiteService\bin\Debug\BusinessSuiteService.exe
+   logfile = C:\NAMFISA\BusinessSuiteService\BusinessSuiteService\bin\Debug\BusinessSuiteService.InstallLog

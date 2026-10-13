@@ -1,0 +1,860 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BusinessSuiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="application_allocations">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="analyst" Type="bigint" />
+    <Property Name="username" Type="varchar(max)" />
+    <Property Name="application" Type="bigint" />
+    <Property Name="date_allocated" Type="datetime" />
+    <Property Name="enabled" Type="bit" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="comments">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="comment_by" Type="bigint" />
+    <Property Name="task" Type="bigint" />
+    <Property Name="comment_date" Type="datetime" />
+    <Property Name="comment" Type="varchar(max)" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="control_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="template" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="data_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="code" Type="varchar" MaxLength="50" />
+    <Property Name="vb_code" Type="int" />
+  </EntityType>
+  <EntityType Name="entities">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="license_number" Type="varchar" MaxLength="50" />
+    <Property Name="entity_name" Type="varchar(max)" />
+    <Property Name="entity_group" Type="bigint" />
+    <Property Name="entity_group_name" Type="varchar(max)" />
+    <Property Name="status" Type="varchar" MaxLength="50" />
+    <Property Name="financial_year_end" Type="date" />
+    <Property Name="principal_officer_name" Type="varchar(max)" />
+    <Property Name="principal_officer_contact" Type="varchar(max)" />
+    <Property Name="principal_officer_email" Type="varchar(max)" />
+    <Property Name="physical_address" Type="varchar(max)" />
+    <Property Name="postal_address" Type="varchar(max)" />
+    <Property Name="registration_date" Type="date" />
+    <Property Name="de_registration_date" Type="date" />
+    <Property Name="entity_instance_id" Type="bigint" />
+    <Property Name="annual_renewal_date" Type="date" />
+    <Property Name="license_expriy_date" Type="date" />
+    <Property Name="expiry_flag" Type="varchar(max)" />
+    <Property Name="last_renewal_form_end_date" Type="date" />
+    <Property Name="last_renewal_form_ers_status" Type="varchar(max)" />
+    <Property Name="last_renewal_form_status" Type="varchar(max)" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="entity_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar(max)" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="code" Type="varchar(max)" />
+    <Property Name="entity_group_id" Type="bigint" />
+    <Property Name="entity_firm_id" Type="bigint" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="files">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="module" Type="bigint" />
+    <Property Name="data" Type="bigint" />
+    <Property Name="filename" Type="varchar(max)" />
+    <Property Name="content_type" Type="varchar(max)" />
+    <Property Name="content_length" Type="varchar" MaxLength="50" />
+    <Property Name="content" Type="varbinary(max)" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="form_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="form_name" Type="varchar(max)" />
+    <Property Name="form_type_id" Type="varchar(max)" />
+    <Property Name="form_attributes" Type="bigint" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="module_items">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="module_id" Type="bigint" />
+    <Property Name="control_type_id" Type="bigint" />
+    <Property Name="data_type_id" Type="bigint" />
+    <Property Name="sort_order" Type="int" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="100" />
+    <Property Name="placeholder" Type="varchar" MaxLength="100" />
+    <Property Name="help" Type="varchar(max)" />
+    <Property Name="slug" Type="varchar" MaxLength="100" />
+    <Property Name="icon" Type="varchar" MaxLength="50" />
+    <Property Name="style" Type="varchar(max)" />
+    <Property Name="default_value" Type="varchar(max)" />
+    <Property Name="validation" Type="varchar(max)" />
+    <Property Name="readonly" Type="bit" Nullable="false" />
+    <Property Name="disabled" Type="bit" Nullable="false" />
+    <Property Name="dataenum" Type="varchar(max)" />
+    <Property Name="datatable" Type="varchar(max)" />
+    <Property Name="database_column" Type="varchar" MaxLength="200" />
+    <Property Name="foreign_module_id" Type="bigint" />
+    <Property Name="length" Type="varchar" MaxLength="50" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="where_query" Type="varchar(max)" />
+    <Property Name="parsable" Type="bit" Nullable="false" />
+    <Property Name="data_source" Type="varchar(max)" />
+    <Property Name="display_condition" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="module_page_items">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="module_page_id" Type="bigint" />
+    <Property Name="module_item_id" Type="bigint" />
+    <Property Name="control_type_id" Type="bigint" />
+    <Property Name="row" Type="int" />
+    <Property Name="col" Type="int" />
+    <Property Name="rowspan" Type="int" />
+    <Property Name="colspan" Type="int" />
+    <Property Name="placeholder" Type="varchar" MaxLength="100" />
+    <Property Name="help" Type="varchar(max)" />
+    <Property Name="slug" Type="varchar" MaxLength="100" />
+    <Property Name="icon" Type="varchar" MaxLength="50" />
+    <Property Name="style" Type="varchar(max)" />
+    <Property Name="default_value" Type="varchar(max)" />
+    <Property Name="validation" Type="varchar(max)" />
+    <Property Name="width" Type="int" />
+    <Property Name="height" Type="int" />
+    <Property Name="readonly" Type="bit" Nullable="false" />
+    <Property Name="disabled" Type="bit" Nullable="false" />
+    <Property Name="is_show" Type="bit" Nullable="false" />
+    <Property Name="show_options" Type="bit" Nullable="false" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="where_query" Type="varchar(max)" />
+    <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="module_page" Type="bigint" />
+    <Property Name="display_condition" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="module_pages">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="module_id" Type="bigint" />
+    <Property Name="page_type_id" Type="bigint" />
+    <Property Name="parent_page_id" Type="bigint" />
+    <Property Name="name" Type="varchar" MaxLength="100" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="type" Type="varchar" MaxLength="50" />
+    <Property Name="layout" Type="varchar" MaxLength="50" />
+    <Property Name="permissions" Type="varchar" MaxLength="50" />
+    <Property Name="add_page" Type="bigint" />
+    <Property Name="edit_page" Type="bigint" />
+    <Property Name="show_page" Type="bigint" />
+    <Property Name="where_query" Type="varchar(max)" />
+    <Property Name="insert_trigger" Type="varchar(max)" />
+    <Property Name="update_trigger" Type="varchar(max)" />
+    <Property Name="delete_trigger" Type="varchar(max)" />
+    <Property Name="label" Type="varchar" MaxLength="50" />
+    <Property Name="icon" Type="varchar" MaxLength="50" />
+    <Property Name="style" Type="varchar" MaxLength="50" />
+    <Property Name="condition" Type="varchar(max)" />
+    <Property Name="hide_until_search" Type="bit" />
+    <Property Name="sort_order" Type="int" Nullable="false" />
+    <Property Name="page_query" Type="varchar(max)" />
+    <Property Name="page_url" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="module_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="module_type_name" Type="varchar" MaxLength="50" />
+    <Property Name="description" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="modules">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="parent_module_id" Type="bigint" />
+    <Property Name="name" Type="varchar(max)" />
+    <Property Name="module_type_id" Type="bigint" />
+    <Property Name="page_title" Type="varchar" MaxLength="100" />
+    <Property Name="page_subtitle" Type="varchar" MaxLength="100" />
+    <Property Name="slug" Type="varchar" MaxLength="100" />
+    <Property Name="icon" Type="varchar" MaxLength="50" />
+    <Property Name="is_active" Type="bit" Nullable="false" />
+    <Property Name="sort_order" Type="int" Nullable="false" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="database_table" Type="varchar" MaxLength="100" />
+    <Property Name="alias" Type="varchar" MaxLength="100" />
+    <Property Name="is_show" Type="bit" Nullable="false" />
+    <Property Name="permissions" Type="varchar" MaxLength="50" />
+    <Property Name="version" Type="int" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="insert_email" Type="varchar(max)" />
+    <Property Name="update_email" Type="varchar(max)" />
+    <Property Name="delete_email" Type="varchar(max)" />
+    <Property Name="url" Type="varchar(max)" />
+    <Property Name="data_source" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="page_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="is_required" Type="bit" Nullable="false" />
+    <Property Name="type" Type="varchar" MaxLength="50" />
+    <Property Name="layout" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="process_definitions">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar(max)" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="reference_prefix" Type="varchar" MaxLength="50" />
+    <Property Name="reference_counter" Type="int" />
+    <Property Name="form_type" Type="bigint" />
+    <Property Name="slc" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="division" Type="varchar" MaxLength="50" />
+    <Property Name="custom_fields" Type="bigint" />
+    <Property Name="assigning_role" Type="bigint" />
+    <Property Name="submission_start_from" Type="date" />
+    <Property Name="analyst_role" Type="bigint" />
+    <Property Name="active" Type="bit" />
+    <Property Name="condition_items" Type="varchar(max)" />
+    <Property Name="slc_specific_by" Type="int" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="process_status">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="icon" Type="varchar(max)" />
+    <Property Name="color" Type="varchar" MaxLength="50" />
+    <Property Name="border_style" Type="varchar" MaxLength="50" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="process_types">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar(max)" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="slc" Type="int" />
+    <Property Name="division" Type="bigint" />
+    <Property Name="attributes" Type="bigint" />
+    <Property Name="form_type" Type="bigint" />
+    <Property Name="process_definition" Type="bigint" />
+    <Property Name="entity_group" Type="bigint" />
+    <Property Name="completion_task" Type="bigint" />
+    <Property Name="assigning_role" Type="bigint" />
+    <Property Name="supervisory_role" Type="bigint" />
+    <Property Name="enable_auto_assign" Type="bit" />
+    <Property Name="condition" Type="varchar(max)" />
+    <Property Name="assigning_type" Type="varchar(max)" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="processes">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="process_definition" Type="bigint" />
+    <Property Name="entity_type" Type="bigint" />
+    <Property Name="entity" Type="bigint" />
+    <Property Name="activity_type" Type="bigint" />
+    <Property Name="division" Type="varchar" MaxLength="50" />
+    <Property Name="name" Type="varchar(max)" />
+    <Property Name="reference" Type="varchar" MaxLength="50" />
+    <Property Name="description_of_the_activity" Type="varchar(max)" />
+    <Property Name="external_reference" Type="varchar" MaxLength="50" />
+    <Property Name="current_task" Type="bigint" />
+    <Property Name="analyst" Type="bigint" />
+    <Property Name="assigned_to" Type="bigint" />
+    <Property Name="created_on" Type="datetime" />
+    <Property Name="submitted_on" Type="datetime" />
+    <Property Name="date_assigned" Type="datetime" />
+    <Property Name="due_date" Type="datetime" />
+    <Property Name="statuss" Type="bigint" />
+    <Property Name="completion_date" Type="datetime" />
+    <Property Name="slc" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="days_spent" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="is_slc_met" Type="bigint" />
+    <Property Name="exceeding_with" Type="int" />
+    <Property Name="contact_person" Type="varchar" MaxLength="50" />
+    <Property Name="contact_number" Type="varchar" MaxLength="50" />
+    <Property Name="contact_email_address" Type="varchar" MaxLength="50" />
+    <Property Name="external_status" Type="varchar(max)" />
+    <Property Name="shared_folder" Type="varchar(max)" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="public_holidays">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="holiday_date" Type="date" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="role_clusters">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="cluster_name" Type="varchar(max)" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="division" Type="bigint" />
+    <Property Name="role" Type="bigint" />
+    <Property Name="entity_groups" Type="varchar(max)" />
+    <Property Name="cluster_users" Type="varchar(max)" />
+    <Property Name="cluster_supervisor" Type="bigint" />
+    <Property Name="cluster_alternative_users" Type="varchar(max)" />
+    <Property Name="start_date" Type="date" />
+    <Property Name="end_date" Type="date" />
+    <Property Name="next_cluster" Type="bigint" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="task_definitions">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="process_definition" Type="bigint" />
+    <Property Name="name" Type="varchar(max)" />
+    <Property Name="sort_order" Type="int" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="slc" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="slc_type" Type="bigint" />
+    <Property Name="role" Type="bigint" />
+    <Property Name="pre_requsite_task" Type="bigint" />
+    <Property Name="priority" Type="varchar" MaxLength="50" />
+    <Property Name="custom_fields" Type="bigint" />
+    <Property Name="task_type" Type="bigint" />
+    <Property Name="process_types" Type="varchar(max)" />
+    <Property Name="have_condition" Type="bit" />
+    <Property Name="condition" Type="varchar(max)" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="task_log">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="task" Type="bigint" />
+    <Property Name="assigned_to" Type="bigint" />
+    <Property Name="start_date" Type="datetime" />
+    <Property Name="completion_date" Type="datetime" />
+    <Property Name="hours_spent" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="tasks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="task_definition" Type="bigint" />
+    <Property Name="process" Type="bigint" />
+    <Property Name="name" Type="varchar(max)" />
+    <Property Name="description_of_the_activity" Type="varchar(max)" />
+    <Property Name="created_on" Type="datetime" />
+    <Property Name="role" Type="bigint" />
+    <Property Name="assigned_to" Type="bigint" />
+    <Property Name="cc_agents" Type="varchar" MaxLength="50" />
+    <Property Name="next_task_agent" Type="bigint" />
+    <Property Name="priority" Type="bigint" />
+    <Property Name="date_assigned" Type="datetime" />
+    <Property Name="due_date" Type="datetime" />
+    <Property Name="status" Type="bigint" />
+    <Property Name="completion_date" Type="datetime" />
+    <Property Name="days_spent" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="is_slc_met" Type="bigint" />
+    <Property Name="exceeding_with" Type="int" />
+    <Property Name="approval_status" Type="bigint" />
+    <Property Name="approval_comment" Type="varchar(max)" />
+    <Property Name="recommendation_status" Type="bigint" />
+    <Property Name="recommendation_comment" Type="varchar(max)" />
+    <Property Name="comment" Type="varchar(max)" />
+    <Property Name="sort_order" Type="int" />
+    <Property Name="decision_status" Type="varchar(max)" />
+    <Property Name="decision_comment" Type="varchar(max)" />
+    <Property Name="ers_action" Type="varchar(max)" />
+    <Property Name="ers_action_comment" Type="varchar(max)" />
+    <Property Name="force_auto_assign" Type="bit" />
+    <Property Name="enabled" Type="bit" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="user_portfolios">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="portfolio_name" Type="varchar(max)" />
+    <Property Name="division" Type="bigint" />
+    <Property Name="portfolio_role" Type="bigint" />
+    <Property Name="portfolio_user" Type="bigint" />
+    <Property Name="portfolio_supervisor" Type="bigint" />
+    <Property Name="portfolio_entities" Type="varchar(max)" />
+    <Property Name="entity" Type="bigint" />
+    <Property Name="status" Type="bit" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="username" Type="varchar" MaxLength="50" />
+    <Property Name="first_name" Type="varchar" MaxLength="50" />
+    <Property Name="last_name" Type="varchar" MaxLength="50" />
+    <Property Name="telephone" Type="varchar(max)" />
+    <Property Name="email_address" Type="varchar(max)" />
+    <Property Name="mobile" Type="varchar" MaxLength="50" />
+    <Property Name="position" Type="varchar(max)" />
+    <Property Name="employee_number" Type="varchar" MaxLength="50" />
+    <Property Name="photo" Type="varchar" MaxLength="50" />
+    <Property Name="profile_photo" Type="bigint" />
+    <Property Name="roles" Type="varchar" MaxLength="50" />
+    <Property Name="signature" Type="bigint" />
+    <Property Name="is_admin" Type="bigint" />
+    <Property Name="last_login_in" Type="datetime" />
+    <Property Name="note" Type="varchar(max)" />
+    <Property Name="child_module" Type="bigint" />
+    <Property Name="child_data" Type="bigint" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="created_by" Type="bigint" />
+    <Property Name="date_updated" Type="datetime" />
+    <Property Name="updated_by" Type="bigint" />
+  </EntityType>
+  <Association Name="FK_module_items_control_types">
+    <End Role="control_types" Type="Self.control_types" Multiplicity="0..1" />
+    <End Role="module_items" Type="Self.module_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="control_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_items">
+        <PropertyRef Name="control_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_items_data_types">
+    <End Role="data_types" Type="Self.data_types" Multiplicity="0..1" />
+    <End Role="module_items" Type="Self.module_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="data_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_items">
+        <PropertyRef Name="data_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_items_modules">
+    <End Role="modules" Type="Self.modules" Multiplicity="0..1" />
+    <End Role="module_items" Type="Self.module_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="modules">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_items">
+        <PropertyRef Name="module_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_items_modules1">
+    <End Role="modules" Type="Self.modules" Multiplicity="0..1" />
+    <End Role="module_items" Type="Self.module_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="modules">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_items">
+        <PropertyRef Name="foreign_module_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_page_items_control_types">
+    <End Role="control_types" Type="Self.control_types" Multiplicity="0..1" />
+    <End Role="module_page_items" Type="Self.module_page_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="control_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_page_items">
+        <PropertyRef Name="control_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_page_items_module_items">
+    <End Role="module_items" Type="Self.module_items" Multiplicity="0..1" />
+    <End Role="module_page_items" Type="Self.module_page_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_items">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_page_items">
+        <PropertyRef Name="module_item_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_page_items_module_pages">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_page_items" Type="Self.module_page_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_page_items">
+        <PropertyRef Name="module_page_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_page_items_module_pages1">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_page_items" Type="Self.module_page_items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_page_items">
+        <PropertyRef Name="module_page" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_module_pages">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_pages1" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages1">
+        <PropertyRef Name="edit_page" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_module_pages1">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_pages1" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages1">
+        <PropertyRef Name="parent_page_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_module_pages2">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_pages1" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages1">
+        <PropertyRef Name="add_page" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_module_pages3">
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="0..1" />
+    <End Role="module_pages1" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_pages">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages1">
+        <PropertyRef Name="show_page" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_modules">
+    <End Role="modules" Type="Self.modules" Multiplicity="0..1" />
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="modules">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages">
+        <PropertyRef Name="module_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_module_pages_page_types">
+    <End Role="page_types" Type="Self.page_types" Multiplicity="0..1" />
+    <End Role="module_pages" Type="Self.module_pages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="page_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="module_pages">
+        <PropertyRef Name="page_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_modules_module_types">
+    <End Role="module_types" Type="Self.module_types" Multiplicity="0..1" />
+    <End Role="modules" Type="Self.modules" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="module_types">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="modules">
+        <PropertyRef Name="module_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fn_addWorkDays" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="datetime">
+    <Parameter Name="date" Type="datetime" Mode="In" />
+    <Parameter Name="days" Type="int" Mode="In" />
+  </Function>
+  <Function Name="GetAllEntities" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="GetBusinessSuiteSubmissionPacks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="startDate" Type="date" Mode="In" />
+    <Parameter Name="endDate" Type="date" Mode="In" />
+    <Parameter Name="formset" Type="varchar(max)" Mode="In" />
+  </Function>
+  <Function Name="GetBusinessSuiteSubmissionPacks2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="startDate" Type="date" Mode="In" />
+    <Parameter Name="endDate" Type="date" Mode="In" />
+    <Parameter Name="formset" Type="varchar(max)" Mode="In" />
+    <Parameter Name="group" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="GetClusterNextTaskDefinitionAgent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="task_definition" Type="bigint" Mode="In" />
+    <Parameter Name="process" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="GetNextTaskDefinitionAgent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="task_definition" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="GetUnassignedTaskList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="GetUnassignedTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="UpdateEntities" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="BusinessSuiteModelStoreContainer">
+    <EntitySet Name="application_allocations" EntityType="Self.application_allocations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="comments" EntityType="Self.comments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="control_types" EntityType="Self.control_types" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="data_types" EntityType="Self.data_types" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="entities" EntityType="Self.entities" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="entity_types" EntityType="Self.entity_types" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="files" EntityType="Self.files" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="form_types" EntityType="Self.form_types" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="module_items" EntityType="Self.module_items" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="module_page_items" EntityType="Self.module_page_items" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="module_pages" EntityType="Self.module_pages" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="module_types" EntityType="Self.module_types" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="modules" EntityType="Self.modules" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="page_types" EntityType="Self.page_types" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="process_definitions" EntityType="Self.process_definitions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="process_status" EntityType="Self.process_status" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="process_types" EntityType="Self.process_types" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="processes" EntityType="Self.processes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="public_holidays" EntityType="Self.public_holidays" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="role_clusters" EntityType="Self.role_clusters" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="task_definitions" EntityType="Self.task_definitions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="task_log" EntityType="Self.task_log" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tasks" EntityType="Self.tasks" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="user_portfolios" EntityType="Self.user_portfolios" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_module_items_control_types" Association="Self.FK_module_items_control_types">
+      <End Role="control_types" EntitySet="control_types" />
+      <End Role="module_items" EntitySet="module_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_items_data_types" Association="Self.FK_module_items_data_types">
+      <End Role="data_types" EntitySet="data_types" />
+      <End Role="module_items" EntitySet="module_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_items_modules" Association="Self.FK_module_items_modules">
+      <End Role="modules" EntitySet="modules" />
+      <End Role="module_items" EntitySet="module_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_items_modules1" Association="Self.FK_module_items_modules1">
+      <End Role="modules" EntitySet="modules" />
+      <End Role="module_items" EntitySet="module_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_page_items_control_types" Association="Self.FK_module_page_items_control_types">
+      <End Role="control_types" EntitySet="control_types" />
+      <End Role="module_page_items" EntitySet="module_page_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_page_items_module_items" Association="Self.FK_module_page_items_module_items">
+      <End Role="module_items" EntitySet="module_items" />
+      <End Role="module_page_items" EntitySet="module_page_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_page_items_module_pages" Association="Self.FK_module_page_items_module_pages">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_page_items" EntitySet="module_page_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_page_items_module_pages1" Association="Self.FK_module_page_items_module_pages1">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_page_items" EntitySet="module_page_items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_module_pages" Association="Self.FK_module_pages_module_pages">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_pages1" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_module_pages1" Association="Self.FK_module_pages_module_pages1">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_pages1" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_module_pages2" Association="Self.FK_module_pages_module_pages2">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_pages1" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_module_pages3" Association="Self.FK_module_pages_module_pages3">
+      <End Role="module_pages" EntitySet="module_pages" />
+      <End Role="module_pages1" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_modules" Association="Self.FK_module_pages_modules">
+      <End Role="modules" EntitySet="modules" />
+      <End Role="module_pages" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_module_pages_page_types" Association="Self.FK_module_pages_page_types">
+      <End Role="page_types" EntitySet="page_types" />
+      <End Role="module_pages" EntitySet="module_pages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_modules_module_types" Association="Self.FK_modules_module_types">
+      <End Role="module_types" EntitySet="module_types" />
+      <End Role="modules" EntitySet="modules" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

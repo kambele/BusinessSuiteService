@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VSABModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="entity_instance">
+    <Key>
+      <PropertyRef Name="entity_instance_id" />
+    </Key>
+    <Property Name="entity_instance_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="entity_type_id" Type="Int32" />
+    <Property Name="reference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="entity_deleted" Type="Boolean" Nullable="false" />
+    <Property Name="state_id" Type="Int32" />
+    <Property Name="type_id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="entity_instance_translation" Relationship="Self.FK_entity_instance_translation_entity_instance" FromRole="entity_instance" ToRole="entity_instance_translation" />
+  </EntityType>
+  <EntityType Name="entity_instance_translation">
+    <Key>
+      <PropertyRef Name="translation_id" />
+    </Key>
+    <Property Name="translation_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="entity_instance_id" Type="Int32" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="language" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="entity_instance" Relationship="Self.FK_entity_instance_translation_entity_instance" FromRole="entity_instance_translation" ToRole="entity_instance" />
+  </EntityType>
+  <EntityType Name="submission_pack_instances">
+    <Key>
+      <PropertyRef Name="submission_pack_instance_id" />
+    </Key>
+    <Property Name="submission_pack_instance_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="reference" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="created_on" Type="DateTime" Precision="3" />
+    <Property Name="end_date" Type="DateTime" Precision="3" />
+    <Property Name="current_version_major" Type="Int32" />
+    <Property Name="current_version_minor" Type="Int32" />
+    <Property Name="entity_instance_id" Type="Int32" />
+    <Property Name="is_deleted" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="submission_pack_translation" Relationship="Self.FK_submission_pack_instance_submission_pack_translation" FromRole="submission_pack_instances" ToRole="submission_pack_translation" />
+    <NavigationProperty Name="submission_pack_versions" Relationship="Self.FK_submission_pack_versions_submission_pack_instances" FromRole="submission_pack_instances" ToRole="submission_pack_versions" />
+  </EntityType>
+  <EntityType Name="submission_pack_translation">
+    <Key>
+      <PropertyRef Name="translation_id" />
+    </Key>
+    <Property Name="translation_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="submission_pack_instance_id" Type="Int32" Nullable="false" />
+    <Property Name="language" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="submission_pack_name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="submission_pack_instances" Relationship="Self.FK_submission_pack_instance_submission_pack_translation" FromRole="submission_pack_translation" ToRole="submission_pack_instances" />
+  </EntityType>
+  <EntityType Name="submission_pack_versions">
+    <Key>
+      <PropertyRef Name="submission_pack_version_id" />
+    </Key>
+    <Property Name="submission_pack_version_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="submission_pack_instance_id" Type="Int32" Nullable="false" />
+    <Property Name="version_no_major" Type="Int32" />
+    <Property Name="version_no_minor" Type="Int32" />
+    <Property Name="user_id" Type="Int32" />
+    <Property Name="created_on" Type="DateTime" Precision="3" />
+    <Property Name="last_updated_on" Type="DateTime" Precision="3" />
+    <Property Name="due_date" Type="DateTime" Precision="3" />
+    <Property Name="action_performed" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="action_performed_on" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="state_id" Type="Int32" />
+    <Property Name="state_last_changed_on" Type="DateTime" Precision="3" />
+    <Property Name="has_warnings" Type="Boolean" Nullable="false" />
+    <Property Name="submitted_by" Type="Int32" />
+    <Property Name="submitted_on" Type="DateTime" Precision="3" />
+    <Property Name="has_errors" Type="Boolean" Nullable="false" />
+    <Property Name="last_saved" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="submission_pack_instances" Relationship="Self.FK_submission_pack_versions_submission_pack_instances" FromRole="submission_pack_versions" ToRole="submission_pack_instances" />
+  </EntityType>
+  <Association Name="FK_entity_instance_translation_entity_instance">
+    <End Role="entity_instance" Type="Self.entity_instance" Multiplicity="1" />
+    <End Role="entity_instance_translation" Type="Self.entity_instance_translation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="entity_instance">
+        <PropertyRef Name="entity_instance_id" />
+      </Principal>
+      <Dependent Role="entity_instance_translation">
+        <PropertyRef Name="entity_instance_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_submission_pack_instance_submission_pack_translation">
+    <End Role="submission_pack_instances" Type="Self.submission_pack_instances" Multiplicity="1" />
+    <End Role="submission_pack_translation" Type="Self.submission_pack_translation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="submission_pack_instances">
+        <PropertyRef Name="submission_pack_instance_id" />
+      </Principal>
+      <Dependent Role="submission_pack_translation">
+        <PropertyRef Name="submission_pack_instance_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_submission_pack_versions_submission_pack_instances">
+    <End Role="submission_pack_instances" Type="Self.submission_pack_instances" Multiplicity="1" />
+    <End Role="submission_pack_versions" Type="Self.submission_pack_versions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="submission_pack_instances">
+        <PropertyRef Name="submission_pack_instance_id" />
+      </Principal>
+      <Dependent Role="submission_pack_versions">
+        <PropertyRef Name="submission_pack_instance_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VSABEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="entity_instance" EntityType="Self.entity_instance" />
+    <EntitySet Name="entity_instance_translation" EntityType="Self.entity_instance_translation" />
+    <EntitySet Name="submission_pack_instances" EntityType="Self.submission_pack_instances" />
+    <EntitySet Name="submission_pack_translation" EntityType="Self.submission_pack_translation" />
+    <EntitySet Name="submission_pack_versions" EntityType="Self.submission_pack_versions" />
+    <AssociationSet Name="FK_entity_instance_translation_entity_instance" Association="Self.FK_entity_instance_translation_entity_instance">
+      <End Role="entity_instance" EntitySet="entity_instance" />
+      <End Role="entity_instance_translation" EntitySet="entity_instance_translation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_submission_pack_instance_submission_pack_translation" Association="Self.FK_submission_pack_instance_submission_pack_translation">
+      <End Role="submission_pack_instances" EntitySet="submission_pack_instances" />
+      <End Role="submission_pack_translation" EntitySet="submission_pack_translation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_submission_pack_versions_submission_pack_instances" Association="Self.FK_submission_pack_versions_submission_pack_instances">
+      <End Role="submission_pack_instances" EntitySet="submission_pack_instances" />
+      <End Role="submission_pack_versions" EntitySet="submission_pack_versions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

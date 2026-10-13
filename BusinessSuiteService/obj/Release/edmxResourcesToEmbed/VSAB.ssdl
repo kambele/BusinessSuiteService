@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VSABModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="entity_instance">
+    <Key>
+      <PropertyRef Name="entity_instance_id" />
+    </Key>
+    <Property Name="entity_instance_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="entity_type_id" Type="int" />
+    <Property Name="reference" Type="nvarchar" MaxLength="50" />
+    <Property Name="entity_deleted" Type="bit" Nullable="false" />
+    <Property Name="state_id" Type="int" />
+    <Property Name="type_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="entity_instance_translation">
+    <Key>
+      <PropertyRef Name="translation_id" />
+    </Key>
+    <Property Name="translation_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="entity_instance_id" Type="int" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="language" Type="nvarchar" MaxLength="5" />
+  </EntityType>
+  <EntityType Name="submission_pack_instances">
+    <Key>
+      <PropertyRef Name="submission_pack_instance_id" />
+    </Key>
+    <Property Name="submission_pack_instance_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="reference" Type="nvarchar" MaxLength="250" />
+    <Property Name="created_on" Type="datetime" />
+    <Property Name="end_date" Type="datetime" />
+    <Property Name="current_version_major" Type="int" />
+    <Property Name="current_version_minor" Type="int" />
+    <Property Name="entity_instance_id" Type="int" />
+    <Property Name="is_deleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="submission_pack_translation">
+    <Key>
+      <PropertyRef Name="translation_id" />
+    </Key>
+    <Property Name="translation_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="submission_pack_instance_id" Type="int" Nullable="false" />
+    <Property Name="language" Type="nvarchar" MaxLength="5" Nullable="false" />
+    <Property Name="submission_pack_name" Type="nvarchar" MaxLength="250" Nullable="false" />
+  </EntityType>
+  <EntityType Name="submission_pack_versions">
+    <Key>
+      <PropertyRef Name="submission_pack_version_id" />
+    </Key>
+    <Property Name="submission_pack_version_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="submission_pack_instance_id" Type="int" Nullable="false" />
+    <Property Name="version_no_major" Type="int" />
+    <Property Name="version_no_minor" Type="int" />
+    <Property Name="user_id" Type="int" />
+    <Property Name="created_on" Type="datetime" />
+    <Property Name="last_updated_on" Type="datetime" />
+    <Property Name="due_date" Type="datetime" />
+    <Property Name="action_performed" Type="nvarchar" MaxLength="50" />
+    <Property Name="action_performed_on" Type="nvarchar" MaxLength="500" />
+    <Property Name="state_id" Type="int" />
+    <Property Name="state_last_changed_on" Type="datetime" />
+    <Property Name="has_warnings" Type="bit" Nullable="false" />
+    <Property Name="submitted_by" Type="int" />
+    <Property Name="submitted_on" Type="datetime" />
+    <Property Name="has_errors" Type="bit" Nullable="false" />
+    <Property Name="last_saved" Type="datetime" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_entity_instance_translation_entity_instance">
+    <End Role="entity_instance" Type="Self.entity_instance" Multiplicity="1" />
+    <End Role="entity_instance_translation" Type="Self.entity_instance_translation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="entity_instance">
+        <PropertyRef Name="entity_instance_id" />
+      </Principal>
+      <Dependent Role="entity_instance_translation">
+        <PropertyRef Name="entity_instance_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_submission_pack_instance_submission_pack_translation">
+    <End Role="submission_pack_instances" Type="Self.submission_pack_instances" Multiplicity="1" />
+    <End Role="submission_pack_translation" Type="Self.submission_pack_translation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="submission_pack_instances">
+        <PropertyRef Name="submission_pack_instance_id" />
+      </Principal>
+      <Dependent Role="submission_pack_translation">
+        <PropertyRef Name="submission_pack_instance_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_submission_pack_versions_submission_pack_instances">
+    <End Role="submission_pack_instances" Type="Self.submission_pack_instances" Multiplicity="1" />
+    <End Role="submission_pack_versions" Type="Self.submission_pack_versions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="submission_pack_instances">
+        <PropertyRef Name="submission_pack_instance_id" />
+      </Principal>
+      <Dependent Role="submission_pack_versions">
+        <PropertyRef Name="submission_pack_instance_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VSABModelStoreContainer">
+    <EntitySet Name="entity_instance" EntityType="Self.entity_instance" Schema="vsabuser" store:Type="Tables" />
+    <EntitySet Name="entity_instance_translation" EntityType="Self.entity_instance_translation" Schema="vsabuser" store:Type="Tables" />
+    <EntitySet Name="submission_pack_instances" EntityType="Self.submission_pack_instances" Schema="vsabuser" store:Type="Tables" />
+    <EntitySet Name="submission_pack_translation" EntityType="Self.submission_pack_translation" Schema="vsabuser" store:Type="Tables" />
+    <EntitySet Name="submission_pack_versions" EntityType="Self.submission_pack_versions" Schema="vsabuser" store:Type="Tables" />
+    <AssociationSet Name="FK_entity_instance_translation_entity_instance" Association="Self.FK_entity_instance_translation_entity_instance">
+      <End Role="entity_instance" EntitySet="entity_instance" />
+      <End Role="entity_instance_translation" EntitySet="entity_instance_translation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_submission_pack_instance_submission_pack_translation" Association="Self.FK_submission_pack_instance_submission_pack_translation">
+      <End Role="submission_pack_instances" EntitySet="submission_pack_instances" />
+      <End Role="submission_pack_translation" EntitySet="submission_pack_translation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_submission_pack_versions_submission_pack_instances" Association="Self.FK_submission_pack_versions_submission_pack_instances">
+      <End Role="submission_pack_instances" EntitySet="submission_pack_instances" />
+      <End Role="submission_pack_versions" EntitySet="submission_pack_versions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

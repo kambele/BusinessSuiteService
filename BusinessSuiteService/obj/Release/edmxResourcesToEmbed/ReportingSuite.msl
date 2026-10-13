@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ReportingSuiteModelStoreContainer" CdmEntityContainer="ReportingSuiteEntities">
+    <EntitySetMapping Name="FormStatus">
+      <EntityTypeMapping TypeName="ReportingSuiteModel.FormStatu">
+        <MappingFragment StoreEntitySet="FormStatus">
+          <ScalarProperty Name="FormStatusID" ColumnName="FormStatusID" />
+          <ScalarProperty Name="FormStatusName" ColumnName="FormStatusName" />
+          <ScalarProperty Name="ERSStatusName" ColumnName="ERSStatusName" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
+          <ScalarProperty Name="StateID" ColumnName="StateID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

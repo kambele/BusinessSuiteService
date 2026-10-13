@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3bdca3b8141a41c9b9e15d1ee7f394ec" Name="Diagram1">
+        <EntityTypeShape EntityType="BusinessSuiteModel.comment" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.control_types" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.data_types" Width="1.5" PointX="3" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.file" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.module_items" Width="1.5" PointX="5.25" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.module_page_items" Width="1.5" PointX="10.5" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.module_pages" Width="1.5" PointX="8.25" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.module_types" Width="1.5" PointX="0.75" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.module" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.page_types" Width="1.5" PointX="6" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.process_definitions" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.process_status" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.task_definitions" Width="1.5" PointX="7.75" PointY="13.75" IsExpanded="true" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_items_control_types" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_page_items_control_types" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_items_data_types" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_items_modules" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_items_modules1" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_page_items_module_items" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_page_items_module_pages" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_page_items_module_pages1" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_pages_module_pages" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_pages_module_pages1" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_pages_module_pages2" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_pages_module_pages3" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_pages_modules" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_module_pages_page_types" ManuallyRouted="false" />
+        <AssociationConnector Association="BusinessSuiteModel.FK_modules_module_types" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.entity_types" Width="1.5" PointX="15.375" PointY="6.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.form_types" Width="1.5" PointX="15.375" PointY="11.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.role_clusters" Width="1.5" PointX="0.75" PointY="16.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.user" Width="1.5" PointX="15.375" PointY="16.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.task" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.task_log" Width="1.5" PointX="17.375" PointY="9.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.public_holidays" Width="1.5" PointX="10.375" PointY="17.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.process" Width="1.5" PointX="3.375" PointY="16.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.application_allocations" Width="1.5" PointX="12.375" PointY="17.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.process_types" Width="1.5" PointX="17.375" PointY="14.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.entity" Width="1.5" PointX="19.375" PointY="0.75" />
+        <EntityTypeShape EntityType="BusinessSuiteModel.user_portfolios" Width="1.5" PointX="19.375" PointY="8.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

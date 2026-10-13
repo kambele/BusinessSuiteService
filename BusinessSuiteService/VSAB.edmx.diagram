@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="471b1ea215744e6babf40c2acf65c64e" Name="Diagram1">
+        <EntityTypeShape EntityType="VSABModel.entity_instance" Width="1.5" PointX="5.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSABModel.entity_instance_translation" Width="1.5" PointX="8" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSABModel.submission_pack_instances" Width="1.5" PointX="0.75" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSABModel.submission_pack_translation" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSABModel.submission_pack_versions" Width="1.5" PointX="3" PointY="3.875" IsExpanded="true" />
+        <AssociationConnector Association="VSABModel.FK_entity_instance_translation_entity_instance" ManuallyRouted="false" />
+        <AssociationConnector Association="VSABModel.FK_submission_pack_instance_submission_pack_translation" ManuallyRouted="false" />
+        <AssociationConnector Association="VSABModel.FK_submission_pack_versions_submission_pack_instances" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

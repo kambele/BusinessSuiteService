@@ -1,0 +1,741 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="BusinessSuiteModelStoreContainer" CdmEntityContainer="BusinessSuiteEntities">
+    <EntitySetMapping Name="comments">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.comment">
+        <MappingFragment StoreEntitySet="comments">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="comment_by" ColumnName="comment_by" />
+          <ScalarProperty Name="task" ColumnName="task" />
+          <ScalarProperty Name="comment_date" ColumnName="comment_date" />
+          <ScalarProperty Name="comment1" ColumnName="comment" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="control_types">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.control_types">
+        <MappingFragment StoreEntitySet="control_types">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="template" ColumnName="template" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="data_types">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.data_types">
+        <MappingFragment StoreEntitySet="data_types">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="vb_code" ColumnName="vb_code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="files">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.file">
+        <MappingFragment StoreEntitySet="files">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="module" ColumnName="module" />
+          <ScalarProperty Name="data" ColumnName="data" />
+          <ScalarProperty Name="filename" ColumnName="filename" />
+          <ScalarProperty Name="content_type" ColumnName="content_type" />
+          <ScalarProperty Name="content_length" ColumnName="content_length" />
+          <ScalarProperty Name="content" ColumnName="content" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="module_items">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.module_items">
+        <MappingFragment StoreEntitySet="module_items">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="module_id" ColumnName="module_id" />
+          <ScalarProperty Name="control_type_id" ColumnName="control_type_id" />
+          <ScalarProperty Name="data_type_id" ColumnName="data_type_id" />
+          <ScalarProperty Name="sort_order" ColumnName="sort_order" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="placeholder" ColumnName="placeholder" />
+          <ScalarProperty Name="help" ColumnName="help" />
+          <ScalarProperty Name="slug" ColumnName="slug" />
+          <ScalarProperty Name="icon" ColumnName="icon" />
+          <ScalarProperty Name="style" ColumnName="style" />
+          <ScalarProperty Name="default_value" ColumnName="default_value" />
+          <ScalarProperty Name="validation" ColumnName="validation" />
+          <ScalarProperty Name="readonly" ColumnName="readonly" />
+          <ScalarProperty Name="disabled" ColumnName="disabled" />
+          <ScalarProperty Name="dataenum" ColumnName="dataenum" />
+          <ScalarProperty Name="datatable" ColumnName="datatable" />
+          <ScalarProperty Name="database_column" ColumnName="database_column" />
+          <ScalarProperty Name="foreign_module_id" ColumnName="foreign_module_id" />
+          <ScalarProperty Name="length" ColumnName="length" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="where_query" ColumnName="where_query" />
+          <ScalarProperty Name="parsable" ColumnName="parsable" />
+          <ScalarProperty Name="data_source" ColumnName="data_source" />
+          <ScalarProperty Name="display_condition" ColumnName="display_condition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="module_page_items">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.module_page_items">
+        <MappingFragment StoreEntitySet="module_page_items">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="module_page_id" ColumnName="module_page_id" />
+          <ScalarProperty Name="module_item_id" ColumnName="module_item_id" />
+          <ScalarProperty Name="control_type_id" ColumnName="control_type_id" />
+          <ScalarProperty Name="row" ColumnName="row" />
+          <ScalarProperty Name="col" ColumnName="col" />
+          <ScalarProperty Name="rowspan" ColumnName="rowspan" />
+          <ScalarProperty Name="colspan" ColumnName="colspan" />
+          <ScalarProperty Name="placeholder" ColumnName="placeholder" />
+          <ScalarProperty Name="help" ColumnName="help" />
+          <ScalarProperty Name="slug" ColumnName="slug" />
+          <ScalarProperty Name="icon" ColumnName="icon" />
+          <ScalarProperty Name="style" ColumnName="style" />
+          <ScalarProperty Name="default_value" ColumnName="default_value" />
+          <ScalarProperty Name="validation" ColumnName="validation" />
+          <ScalarProperty Name="width" ColumnName="width" />
+          <ScalarProperty Name="height" ColumnName="height" />
+          <ScalarProperty Name="readonly" ColumnName="readonly" />
+          <ScalarProperty Name="disabled" ColumnName="disabled" />
+          <ScalarProperty Name="is_show" ColumnName="is_show" />
+          <ScalarProperty Name="show_options" ColumnName="show_options" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="where_query" ColumnName="where_query" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="module_page" ColumnName="module_page" />
+          <ScalarProperty Name="display_condition" ColumnName="display_condition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="module_pages">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.module_pages">
+        <MappingFragment StoreEntitySet="module_pages">
+          <ScalarProperty Name="page_url" ColumnName="page_url" />
+          <ScalarProperty Name="page_query" ColumnName="page_query" />
+          <ScalarProperty Name="sort_order" ColumnName="sort_order" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="module_id" ColumnName="module_id" />
+          <ScalarProperty Name="page_type_id" ColumnName="page_type_id" />
+          <ScalarProperty Name="parent_page_id" ColumnName="parent_page_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="layout" ColumnName="layout" />
+          <ScalarProperty Name="permissions" ColumnName="permissions" />
+          <ScalarProperty Name="add_page" ColumnName="add_page" />
+          <ScalarProperty Name="edit_page" ColumnName="edit_page" />
+          <ScalarProperty Name="show_page" ColumnName="show_page" />
+          <ScalarProperty Name="where_query" ColumnName="where_query" />
+          <ScalarProperty Name="insert_trigger" ColumnName="insert_trigger" />
+          <ScalarProperty Name="update_trigger" ColumnName="update_trigger" />
+          <ScalarProperty Name="delete_trigger" ColumnName="delete_trigger" />
+          <ScalarProperty Name="label" ColumnName="label" />
+          <ScalarProperty Name="icon" ColumnName="icon" />
+          <ScalarProperty Name="style" ColumnName="style" />
+          <ScalarProperty Name="condition" ColumnName="condition" />
+          <ScalarProperty Name="hide_until_search" ColumnName="hide_until_search" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="module_types">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.module_types">
+        <MappingFragment StoreEntitySet="module_types">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="module_type_name" ColumnName="module_type_name" />
+          <ScalarProperty Name="description" ColumnName="description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="modules">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.module">
+        <MappingFragment StoreEntitySet="modules">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="parent_module_id" ColumnName="parent_module_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="module_type_id" ColumnName="module_type_id" />
+          <ScalarProperty Name="page_title" ColumnName="page_title" />
+          <ScalarProperty Name="page_subtitle" ColumnName="page_subtitle" />
+          <ScalarProperty Name="slug" ColumnName="slug" />
+          <ScalarProperty Name="icon" ColumnName="icon" />
+          <ScalarProperty Name="is_active" ColumnName="is_active" />
+          <ScalarProperty Name="sort_order" ColumnName="sort_order" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="database_table" ColumnName="database_table" />
+          <ScalarProperty Name="alias" ColumnName="alias" />
+          <ScalarProperty Name="is_show" ColumnName="is_show" />
+          <ScalarProperty Name="permissions" ColumnName="permissions" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="insert_email" ColumnName="insert_email" />
+          <ScalarProperty Name="update_email" ColumnName="update_email" />
+          <ScalarProperty Name="delete_email" ColumnName="delete_email" />
+          <ScalarProperty Name="url" ColumnName="url" />
+          <ScalarProperty Name="data_source" ColumnName="data_source" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="page_types">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.page_types">
+        <MappingFragment StoreEntitySet="page_types">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="is_required" ColumnName="is_required" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="layout" ColumnName="layout" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="process_definitions">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.process_definitions">
+        <MappingFragment StoreEntitySet="process_definitions">
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="submission_start_from" ColumnName="submission_start_from" />
+          <ScalarProperty Name="slc_specific_by" ColumnName="slc_specific_by" />
+          <ScalarProperty Name="condition_items" ColumnName="condition_items" />
+          <ScalarProperty Name="analyst_role" ColumnName="analyst_role" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="reference_prefix" ColumnName="reference_prefix" />
+          <ScalarProperty Name="reference_counter" ColumnName="reference_counter" />
+          <ScalarProperty Name="form_type" ColumnName="form_type" />
+          <ScalarProperty Name="slc" ColumnName="slc" />
+          <ScalarProperty Name="division" ColumnName="division" />
+          <ScalarProperty Name="custom_fields" ColumnName="custom_fields" />
+          <ScalarProperty Name="assigning_role" ColumnName="assigning_role" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="process_status">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.process_status">
+        <MappingFragment StoreEntitySet="process_status">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="icon" ColumnName="icon" />
+          <ScalarProperty Name="color" ColumnName="color" />
+          <ScalarProperty Name="border_style" ColumnName="border_style" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="task_definitions">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.task_definitions">
+        <MappingFragment StoreEntitySet="task_definitions">
+          <ScalarProperty Name="condition" ColumnName="condition" />
+          <ScalarProperty Name="have_condition" ColumnName="have_condition" />
+          <ScalarProperty Name="process_types" ColumnName="process_types" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="process_definition" ColumnName="process_definition" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="sort_order" ColumnName="sort_order" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="slc" ColumnName="slc" />
+          <ScalarProperty Name="slc_type" ColumnName="slc_type" />
+          <ScalarProperty Name="role" ColumnName="role" />
+          <ScalarProperty Name="pre_requsite_task" ColumnName="pre_requsite_task" />
+          <ScalarProperty Name="priority" ColumnName="priority" />
+          <ScalarProperty Name="custom_fields" ColumnName="custom_fields" />
+          <ScalarProperty Name="task_type" ColumnName="task_type" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetBusinessSuiteSubmissionPacks" FunctionName="BusinessSuiteModel.Store.GetBusinessSuiteSubmissionPacks">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BusinessSuiteModel.GetBusinessSuiteSubmissionPacks_Result">
+          <ScalarProperty Name="entity_instance_id" ColumnName="entity_instance_id" />
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="state_last_changed_on" ColumnName="state_last_changed_on" />
+          <ScalarProperty Name="reference" ColumnName="reference" />
+          <ScalarProperty Name="submission_pack_name" ColumnName="submission_pack_name" />
+          <ScalarProperty Name="end_date" ColumnName="end_date" />
+          <ScalarProperty Name="created_on" ColumnName="created_on" />
+          <ScalarProperty Name="action_performed" ColumnName="action_performed" />
+          <ScalarProperty Name="submitted_on" ColumnName="submitted_on" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetBusinessSuiteSubmissionPacks2" FunctionName="BusinessSuiteModel.Store.GetBusinessSuiteSubmissionPacks2">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BusinessSuiteModel.GetBusinessSuiteSubmissionPacks2_Result">
+          <ScalarProperty Name="entity_instance_id" ColumnName="entity_instance_id" />
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="state_last_changed_on" ColumnName="state_last_changed_on" />
+          <ScalarProperty Name="reference" ColumnName="reference" />
+          <ScalarProperty Name="submission_pack_name" ColumnName="submission_pack_name" />
+          <ScalarProperty Name="end_date" ColumnName="end_date" />
+          <ScalarProperty Name="created_on" ColumnName="created_on" />
+          <ScalarProperty Name="action_performed" ColumnName="action_performed" />
+          <ScalarProperty Name="submitted_on" ColumnName="submitted_on" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="UpdateEntities" FunctionName="BusinessSuiteModel.Store.UpdateEntities" />
+    <EntitySetMapping Name="entity_types">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.entity_types">
+        <MappingFragment StoreEntitySet="entity_types">
+          <ScalarProperty Name="entity_firm_id" ColumnName="entity_firm_id" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="entity_group_id" ColumnName="entity_group_id" />
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="form_types">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.form_types">
+        <MappingFragment StoreEntitySet="form_types">
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="form_attributes" ColumnName="form_attributes" />
+          <ScalarProperty Name="form_type_id" ColumnName="form_type_id" />
+          <ScalarProperty Name="form_name" ColumnName="form_name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetAllEntities" FunctionName="BusinessSuiteModel.Store.GetAllEntities">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BusinessSuiteModel.GetAllEntities_Result">
+          <ScalarProperty Name="Fund_Name" ColumnName="Fund Name" />
+          <ScalarProperty Name="License_Number" ColumnName="License Number" />
+          <ScalarProperty Name="Financial_Year_End" ColumnName="Financial Year End" />
+          <ScalarProperty Name="Principal_Officer" ColumnName="Principal Officer" />
+          <ScalarProperty Name="Principal_Officer_Email" ColumnName="Principal Officer Email" />
+          <ScalarProperty Name="Principal_Officer_Tel" ColumnName="Principal Officer Tel" />
+          <ScalarProperty Name="entity_instance_id" ColumnName="entity_instance_id" />
+          <ScalarProperty Name="item_registrationdate" ColumnName="item_registrationdate" />
+          <ScalarProperty Name="address" ColumnName="address" />
+          <ScalarProperty Name="Company_Status" ColumnName="Company Status" />
+          <ScalarProperty Name="reference" ColumnName="reference" />
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="item_deregistrationdate" ColumnName="item_deregistrationdate" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetClusterNextTaskDefinitionAgent" FunctionName="BusinessSuiteModel.Store.GetClusterNextTaskDefinitionAgent" />
+    <FunctionImportMapping FunctionImportName="GetUnassignedTaskList" FunctionName="BusinessSuiteModel.Store.GetUnassignedTaskList" />
+    <FunctionImportMapping FunctionImportName="GetUnassignedTasks" FunctionName="BusinessSuiteModel.Store.GetUnassignedTasks">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="BusinessSuiteModel.GetUnassignedTasks_Result">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="task_definition" ColumnName="task_definition" />
+          <ScalarProperty Name="process" ColumnName="process" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="description_of_the_activity" ColumnName="description_of_the_activity" />
+          <ScalarProperty Name="created_on" ColumnName="created_on" />
+          <ScalarProperty Name="role" ColumnName="role" />
+          <ScalarProperty Name="assigned_to" ColumnName="assigned_to" />
+          <ScalarProperty Name="cc_agents" ColumnName="cc_agents" />
+          <ScalarProperty Name="next_task_agent" ColumnName="next_task_agent" />
+          <ScalarProperty Name="priority" ColumnName="priority" />
+          <ScalarProperty Name="date_assigned" ColumnName="date_assigned" />
+          <ScalarProperty Name="due_date" ColumnName="due_date" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="completion_date" ColumnName="completion_date" />
+          <ScalarProperty Name="days_spent" ColumnName="days_spent" />
+          <ScalarProperty Name="is_slc_met" ColumnName="is_slc_met" />
+          <ScalarProperty Name="exceeding_with" ColumnName="exceeding_with" />
+          <ScalarProperty Name="approval_status" ColumnName="approval_status" />
+          <ScalarProperty Name="approval_comment" ColumnName="approval_comment" />
+          <ScalarProperty Name="recommendation_status" ColumnName="recommendation_status" />
+          <ScalarProperty Name="recommendation_comment" ColumnName="recommendation_comment" />
+          <ScalarProperty Name="comment" ColumnName="comment" />
+          <ScalarProperty Name="sort_order" ColumnName="sort_order" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="id1" ColumnName="id1" />
+          <ScalarProperty Name="process_definition" ColumnName="process_definition" />
+          <ScalarProperty Name="name1" ColumnName="name1" />
+          <ScalarProperty Name="sort_order1" ColumnName="sort_order1" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="slc" ColumnName="slc" />
+          <ScalarProperty Name="slc_type" ColumnName="slc_type" />
+          <ScalarProperty Name="role1" ColumnName="role1" />
+          <ScalarProperty Name="pre_requsite_task" ColumnName="pre_requsite_task" />
+          <ScalarProperty Name="priority1" ColumnName="priority1" />
+          <ScalarProperty Name="custom_fields" ColumnName="custom_fields" />
+          <ScalarProperty Name="task_type" ColumnName="task_type" />
+          <ScalarProperty Name="process_types" ColumnName="process_types" />
+          <ScalarProperty Name="note1" ColumnName="note1" />
+          <ScalarProperty Name="child_module1" ColumnName="child_module1" />
+          <ScalarProperty Name="child_data1" ColumnName="child_data1" />
+          <ScalarProperty Name="is_deleted1" ColumnName="is_deleted1" />
+          <ScalarProperty Name="date_created1" ColumnName="date_created1" />
+          <ScalarProperty Name="created_by1" ColumnName="created_by1" />
+          <ScalarProperty Name="date_updated1" ColumnName="date_updated1" />
+          <ScalarProperty Name="updated_by1" ColumnName="updated_by1" />
+          <ScalarProperty Name="id2" ColumnName="id2" />
+          <ScalarProperty Name="process_definition1" ColumnName="process_definition1" />
+          <ScalarProperty Name="entity_type" ColumnName="entity_type" />
+          <ScalarProperty Name="entity" ColumnName="entity" />
+          <ScalarProperty Name="activity_type" ColumnName="activity_type" />
+          <ScalarProperty Name="division" ColumnName="division" />
+          <ScalarProperty Name="name2" ColumnName="name2" />
+          <ScalarProperty Name="reference" ColumnName="reference" />
+          <ScalarProperty Name="description_of_the_activity1" ColumnName="description_of_the_activity1" />
+          <ScalarProperty Name="external_reference" ColumnName="external_reference" />
+          <ScalarProperty Name="current_task" ColumnName="current_task" />
+          <ScalarProperty Name="analyst" ColumnName="analyst" />
+          <ScalarProperty Name="assigned_to1" ColumnName="assigned_to1" />
+          <ScalarProperty Name="created_on1" ColumnName="created_on1" />
+          <ScalarProperty Name="submitted_on" ColumnName="submitted_on" />
+          <ScalarProperty Name="date_assigned1" ColumnName="date_assigned1" />
+          <ScalarProperty Name="due_date1" ColumnName="due_date1" />
+          <ScalarProperty Name="statuss" ColumnName="statuss" />
+          <ScalarProperty Name="completion_date1" ColumnName="completion_date1" />
+          <ScalarProperty Name="slc1" ColumnName="slc1" />
+          <ScalarProperty Name="days_spent1" ColumnName="days_spent1" />
+          <ScalarProperty Name="is_slc_met1" ColumnName="is_slc_met1" />
+          <ScalarProperty Name="exceeding_with1" ColumnName="exceeding_with1" />
+          <ScalarProperty Name="contact_person" ColumnName="contact_person" />
+          <ScalarProperty Name="contact_number" ColumnName="contact_number" />
+          <ScalarProperty Name="contact_email_address" ColumnName="contact_email_address" />
+          <ScalarProperty Name="external_status" ColumnName="external_status" />
+          <ScalarProperty Name="note2" ColumnName="note2" />
+          <ScalarProperty Name="child_module2" ColumnName="child_module2" />
+          <ScalarProperty Name="child_data2" ColumnName="child_data2" />
+          <ScalarProperty Name="is_deleted2" ColumnName="is_deleted2" />
+          <ScalarProperty Name="date_created2" ColumnName="date_created2" />
+          <ScalarProperty Name="created_by2" ColumnName="created_by2" />
+          <ScalarProperty Name="date_updated2" ColumnName="date_updated2" />
+          <ScalarProperty Name="updated_by2" ColumnName="updated_by2" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="role_clusters">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.role_clusters">
+        <MappingFragment StoreEntitySet="role_clusters">
+          <ScalarProperty Name="next_cluster" ColumnName="next_cluster" />
+          <ScalarProperty Name="cluster_alternative_users" ColumnName="cluster_alternative_users" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="end_date" ColumnName="end_date" />
+          <ScalarProperty Name="start_date" ColumnName="start_date" />
+          <ScalarProperty Name="cluster_supervisor" ColumnName="cluster_supervisor" />
+          <ScalarProperty Name="cluster_users" ColumnName="cluster_users" />
+          <ScalarProperty Name="entity_groups" ColumnName="entity_groups" />
+          <ScalarProperty Name="role" ColumnName="role" />
+          <ScalarProperty Name="division" ColumnName="division" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="cluster_name" ColumnName="cluster_name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetNextTaskDefinitionAgent" FunctionName="BusinessSuiteModel.Store.GetNextTaskDefinitionAgent" />
+    <EntitySetMapping Name="users">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.user">
+        <MappingFragment StoreEntitySet="users">
+          <ScalarProperty Name="last_login_in" ColumnName="last_login_in" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="is_admin" ColumnName="is_admin" />
+          <ScalarProperty Name="signature" ColumnName="signature" />
+          <ScalarProperty Name="roles" ColumnName="roles" />
+          <ScalarProperty Name="profile_photo" ColumnName="profile_photo" />
+          <ScalarProperty Name="photo" ColumnName="photo" />
+          <ScalarProperty Name="employee_number" ColumnName="employee_number" />
+          <ScalarProperty Name="position" ColumnName="position" />
+          <ScalarProperty Name="mobile" ColumnName="mobile" />
+          <ScalarProperty Name="email_address" ColumnName="email_address" />
+          <ScalarProperty Name="telephone" ColumnName="telephone" />
+          <ScalarProperty Name="last_name" ColumnName="last_name" />
+          <ScalarProperty Name="first_name" ColumnName="first_name" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tasks">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.task">
+        <MappingFragment StoreEntitySet="tasks">
+          <ScalarProperty Name="enabled" ColumnName="enabled" />
+          <ScalarProperty Name="force_auto_assign" ColumnName="force_auto_assign" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="ers_action_comment" ColumnName="ers_action_comment" />
+          <ScalarProperty Name="ers_action" ColumnName="ers_action" />
+          <ScalarProperty Name="decision_comment" ColumnName="decision_comment" />
+          <ScalarProperty Name="decision_status" ColumnName="decision_status" />
+          <ScalarProperty Name="sort_order" ColumnName="sort_order" />
+          <ScalarProperty Name="comment" ColumnName="comment" />
+          <ScalarProperty Name="recommendation_comment" ColumnName="recommendation_comment" />
+          <ScalarProperty Name="recommendation_status" ColumnName="recommendation_status" />
+          <ScalarProperty Name="approval_comment" ColumnName="approval_comment" />
+          <ScalarProperty Name="approval_status" ColumnName="approval_status" />
+          <ScalarProperty Name="exceeding_with" ColumnName="exceeding_with" />
+          <ScalarProperty Name="is_slc_met" ColumnName="is_slc_met" />
+          <ScalarProperty Name="days_spent" ColumnName="days_spent" />
+          <ScalarProperty Name="completion_date" ColumnName="completion_date" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="due_date" ColumnName="due_date" />
+          <ScalarProperty Name="date_assigned" ColumnName="date_assigned" />
+          <ScalarProperty Name="priority" ColumnName="priority" />
+          <ScalarProperty Name="next_task_agent" ColumnName="next_task_agent" />
+          <ScalarProperty Name="cc_agents" ColumnName="cc_agents" />
+          <ScalarProperty Name="assigned_to" ColumnName="assigned_to" />
+          <ScalarProperty Name="role" ColumnName="role" />
+          <ScalarProperty Name="created_on" ColumnName="created_on" />
+          <ScalarProperty Name="description_of_the_activity" ColumnName="description_of_the_activity" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="process" ColumnName="process" />
+          <ScalarProperty Name="task_definition" ColumnName="task_definition" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="task_log">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.task_log">
+        <MappingFragment StoreEntitySet="task_log">
+          <ScalarProperty Name="assigned_to" ColumnName="assigned_to" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="hours_spent" ColumnName="hours_spent" />
+          <ScalarProperty Name="completion_date" ColumnName="completion_date" />
+          <ScalarProperty Name="start_date" ColumnName="start_date" />
+          <ScalarProperty Name="task" ColumnName="task" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="public_holidays">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.public_holidays">
+        <MappingFragment StoreEntitySet="public_holidays">
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="holiday_date" ColumnName="holiday_date" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="processes">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.process">
+        <MappingFragment StoreEntitySet="processes">
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="shared_folder" ColumnName="shared_folder" />
+          <ScalarProperty Name="external_status" ColumnName="external_status" />
+          <ScalarProperty Name="contact_email_address" ColumnName="contact_email_address" />
+          <ScalarProperty Name="contact_number" ColumnName="contact_number" />
+          <ScalarProperty Name="contact_person" ColumnName="contact_person" />
+          <ScalarProperty Name="exceeding_with" ColumnName="exceeding_with" />
+          <ScalarProperty Name="is_slc_met" ColumnName="is_slc_met" />
+          <ScalarProperty Name="days_spent" ColumnName="days_spent" />
+          <ScalarProperty Name="slc" ColumnName="slc" />
+          <ScalarProperty Name="completion_date" ColumnName="completion_date" />
+          <ScalarProperty Name="statuss" ColumnName="statuss" />
+          <ScalarProperty Name="due_date" ColumnName="due_date" />
+          <ScalarProperty Name="date_assigned" ColumnName="date_assigned" />
+          <ScalarProperty Name="submitted_on" ColumnName="submitted_on" />
+          <ScalarProperty Name="created_on" ColumnName="created_on" />
+          <ScalarProperty Name="assigned_to" ColumnName="assigned_to" />
+          <ScalarProperty Name="analyst" ColumnName="analyst" />
+          <ScalarProperty Name="current_task" ColumnName="current_task" />
+          <ScalarProperty Name="external_reference" ColumnName="external_reference" />
+          <ScalarProperty Name="description_of_the_activity" ColumnName="description_of_the_activity" />
+          <ScalarProperty Name="reference" ColumnName="reference" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="division" ColumnName="division" />
+          <ScalarProperty Name="activity_type" ColumnName="activity_type" />
+          <ScalarProperty Name="entity" ColumnName="entity" />
+          <ScalarProperty Name="entity_type" ColumnName="entity_type" />
+          <ScalarProperty Name="process_definition" ColumnName="process_definition" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="application_allocations">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.application_allocations">
+        <MappingFragment StoreEntitySet="application_allocations">
+          <ScalarProperty Name="enabled" ColumnName="enabled" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="date_allocated" ColumnName="date_allocated" />
+          <ScalarProperty Name="application" ColumnName="application" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="analyst" ColumnName="analyst" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="process_types">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.process_types">
+        <MappingFragment StoreEntitySet="process_types">
+          <ScalarProperty Name="assigning_type" ColumnName="assigning_type" />
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="condition" ColumnName="condition" />
+          <ScalarProperty Name="enable_auto_assign" ColumnName="enable_auto_assign" />
+          <ScalarProperty Name="supervisory_role" ColumnName="supervisory_role" />
+          <ScalarProperty Name="assigning_role" ColumnName="assigning_role" />
+          <ScalarProperty Name="completion_task" ColumnName="completion_task" />
+          <ScalarProperty Name="entity_group" ColumnName="entity_group" />
+          <ScalarProperty Name="process_definition" ColumnName="process_definition" />
+          <ScalarProperty Name="form_type" ColumnName="form_type" />
+          <ScalarProperty Name="attributes" ColumnName="attributes" />
+          <ScalarProperty Name="division" ColumnName="division" />
+          <ScalarProperty Name="slc" ColumnName="slc" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="entities">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.entity">
+        <MappingFragment StoreEntitySet="entities">
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="last_renewal_form_status" ColumnName="last_renewal_form_status" />
+          <ScalarProperty Name="last_renewal_form_ers_status" ColumnName="last_renewal_form_ers_status" />
+          <ScalarProperty Name="last_renewal_form_end_date" ColumnName="last_renewal_form_end_date" />
+          <ScalarProperty Name="expiry_flag" ColumnName="expiry_flag" />
+          <ScalarProperty Name="license_expriy_date" ColumnName="license_expriy_date" />
+          <ScalarProperty Name="annual_renewal_date" ColumnName="annual_renewal_date" />
+          <ScalarProperty Name="entity_instance_id" ColumnName="entity_instance_id" />
+          <ScalarProperty Name="de_registration_date" ColumnName="de_registration_date" />
+          <ScalarProperty Name="registration_date" ColumnName="registration_date" />
+          <ScalarProperty Name="postal_address" ColumnName="postal_address" />
+          <ScalarProperty Name="physical_address" ColumnName="physical_address" />
+          <ScalarProperty Name="principal_officer_email" ColumnName="principal_officer_email" />
+          <ScalarProperty Name="principal_officer_contact" ColumnName="principal_officer_contact" />
+          <ScalarProperty Name="principal_officer_name" ColumnName="principal_officer_name" />
+          <ScalarProperty Name="financial_year_end" ColumnName="financial_year_end" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="entity_group_name" ColumnName="entity_group_name" />
+          <ScalarProperty Name="entity_group" ColumnName="entity_group" />
+          <ScalarProperty Name="entity_name" ColumnName="entity_name" />
+          <ScalarProperty Name="license_number" ColumnName="license_number" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="user_portfolios">
+      <EntityTypeMapping TypeName="BusinessSuiteModel.user_portfolios">
+        <MappingFragment StoreEntitySet="user_portfolios">
+          <ScalarProperty Name="updated_by" ColumnName="updated_by" />
+          <ScalarProperty Name="date_updated" ColumnName="date_updated" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+          <ScalarProperty Name="child_data" ColumnName="child_data" />
+          <ScalarProperty Name="child_module" ColumnName="child_module" />
+          <ScalarProperty Name="note" ColumnName="note" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="entity" ColumnName="entity" />
+          <ScalarProperty Name="portfolio_entities" ColumnName="portfolio_entities" />
+          <ScalarProperty Name="portfolio_supervisor" ColumnName="portfolio_supervisor" />
+          <ScalarProperty Name="portfolio_user" ColumnName="portfolio_user" />
+          <ScalarProperty Name="portfolio_role" ColumnName="portfolio_role" />
+          <ScalarProperty Name="division" ColumnName="division" />
+          <ScalarProperty Name="portfolio_name" ColumnName="portfolio_name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
