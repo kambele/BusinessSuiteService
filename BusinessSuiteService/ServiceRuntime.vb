@@ -26,6 +26,12 @@ Friend NotInheritable Class ServiceRuntime
         End Get
     End Property
 
+    Public Shared ReadOnly Property StatusChangeBatchSize As Integer
+        Get
+            Return GetPositiveInteger("StatusChangeBatchSize", 250)
+        End Get
+    End Property
+
     Public Shared ReadOnly Property CommandTimeoutSeconds As Integer
         Get
             Return GetPositiveInteger("DatabaseCommandTimeoutSeconds", 120)
@@ -166,6 +172,54 @@ WHERE task_row.sort_order IS NULL;"
         End Using
 
         Return taskIds.Distinct().ToList()
+    End Function
+
+    Public Shared Function GetPendingStatusChangeProcessIds(connection As SqlConnection) As List(Of Long)
+        Dim processIds As New List(Of Long)()
+        Const sql As String =
+"IF COL_LENGTH('dbo.processes', 'form_status_change') IS NULL
+BEGIN
+    SELECT CAST(NULL AS bigint) AS id WHERE 1 = 0;
+    RETURN;
+END;
+
+SELECT TOP (@BatchSize) process_row.id
+FROM dbo.processes AS process_row WITH (READPAST)
+WHERE process_row.form_status_change = 1
+  AND ISNULL(process_row.is_deleted, 0) = 0
+ORDER BY COALESCE(process_row.date_updated, process_row.date_created), process_row.id;"
+
+        Using command As New SqlCommand(sql, connection)
+            command.CommandTimeout = CommandTimeoutSeconds
+            command.Parameters.Add("@BatchSize", SqlDbType.Int).Value = StatusChangeBatchSize
+
+            Using reader = command.ExecuteReader(CommandBehavior.SequentialAccess)
+                While reader.Read()
+                    If Not reader.IsDBNull(0) Then
+                        processIds.Add(reader.GetInt64(0))
+                    End If
+                End While
+            End Using
+        End Using
+
+        Return processIds
+    End Function
+
+    Public Shared Function IsStatusChangePending(connection As SqlConnection, processId As Long) As Boolean
+        Const sql As String =
+"SELECT CASE WHEN EXISTS
+(
+    SELECT 1
+    FROM dbo.processes
+    WHERE id = @ProcessId
+      AND form_status_change = 1
+) THEN 1 ELSE 0 END;"
+
+        Using command As New SqlCommand(sql, connection)
+            command.CommandTimeout = CommandTimeoutSeconds
+            command.Parameters.Add("@ProcessId", SqlDbType.BigInt).Value = processId
+            Return Convert.ToInt32(command.ExecuteScalar()) = 1
+        End Using
     End Function
 
     Private Shared Function GetPositiveInteger(key As String, defaultValue As Integer) As Integer

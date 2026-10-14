@@ -947,6 +947,10 @@ Public Class Service1
                         If ServiceRuntime.IsEnabled("Update") Then
                             RunStep("Update", AddressOf Update)
                         End If
+
+                        If ServiceRuntime.IsEnabled("TrackStatusChange", True) Then
+                            RunStep("TrackStatusChange", Sub() TrackStatusChange(runLock))
+                        End If
                     End If
                 End Using
             Catch ex As Exception
@@ -983,6 +987,55 @@ Public Class Service1
             log(stepName & ": Failed: " & ex.Message)
             log(stepName & ": Failed: " & ex.StackTrace)
         End Try
+    End Sub
+
+    Public Sub TrackStatusChange(connection As SqlConnection)
+        Dim processModule = db.modules.FirstOrDefault(
+            Function(value) Not value.is_deleted AndAlso
+                            (value.slug = "processes" OrElse value.database_table = "processes"))
+        If processModule Is Nothing Then
+            Throw New InvalidOperationException("TrackStatusChange: the Processes module is not configured.")
+        End If
+
+        Dim trackingPage = db.module_pages.FirstOrDefault(
+            Function(value) value.module_id = processModule.id AndAlso
+                            value.name = "Track Status Change" AndAlso
+                            value.page_type_id = 2)
+        If trackingPage Is Nothing Then
+            Throw New InvalidOperationException(
+                "TrackStatusChange: run 20261014-track-process-external-status.sql before enabling this service step.")
+        End If
+
+        Dim processIds = ServiceRuntime.GetPendingStatusChangeProcessIds(connection)
+        If processIds.Count = 0 Then
+            log("TrackStatusChange: no pending external-status changes found.")
+            Return
+        End If
+
+        Dim completed = 0
+        Dim failed = 0
+        For Each processId In processIds
+            If stopSignal.IsSet Then Exit For
+
+            Dim form As New List(Of FormValue) From {
+                New FormValue("form_status_change", "0")
+            }
+
+            Dim submitted = PostForm(form, trackingPage, processId.ToString(CultureInfo.InvariantCulture))
+            Dim remainsPending = ServiceRuntime.IsStatusChangePending(connection, processId)
+            If submitted AndAlso Not remainsPending Then
+                completed += 1
+                log("TrackStatusChange: processed process " & processId.ToString(CultureInfo.InvariantCulture) & ".")
+            Else
+                failed += 1
+                log("TrackStatusChange: process " & processId.ToString(CultureInfo.InvariantCulture) &
+                    " remains pending because the workflow page failed.")
+            End If
+        Next
+
+        log("TrackStatusChange: processed " & completed.ToString(CultureInfo.InvariantCulture) &
+            " of " & processIds.Count.ToString(CultureInfo.InvariantCulture) &
+            " pending change(s); failures: " & failed.ToString(CultureInfo.InvariantCulture) & ".")
     End Sub
 
     Private Sub ResetDataContexts()
