@@ -183,11 +183,39 @@ BEGIN
     RETURN;
 END;
 
+DECLARE @now datetime = GETDATE();
+DECLARE @rotationOffset bigint =
+    CONVERT(bigint, DATEDIFF(minute, CONVERT(datetime, '20200101', 112), @now) / 2) * @BatchSize;
+
+;WITH pending_processes AS
+(
+    SELECT process_row.id,
+           COALESCE(process_row.date_updated, process_row.date_created) AS changed_on,
+           ROW_NUMBER() OVER
+           (
+               ORDER BY COALESCE(process_row.date_updated, process_row.date_created), process_row.id
+           ) AS queue_number,
+           COUNT_BIG(*) OVER () AS queue_count
+    FROM dbo.processes AS process_row WITH (READPAST)
+    WHERE process_row.form_status_change = 1
+      AND ISNULL(process_row.is_deleted, 0) = 0
+)
 SELECT TOP (@BatchSize) process_row.id
-FROM dbo.processes AS process_row WITH (READPAST)
-WHERE process_row.form_status_change = 1
-  AND ISNULL(process_row.is_deleted, 0) = 0
-ORDER BY COALESCE(process_row.date_updated, process_row.date_created), process_row.id;"
+FROM pending_processes AS process_row
+ORDER BY CASE WHEN process_row.changed_on >= DATEADD(day, -2, @now) THEN 0 ELSE 1 END,
+         CASE
+             WHEN process_row.changed_on >= DATEADD(day, -2, @now) THEN process_row.changed_on
+         END DESC,
+         CASE
+             WHEN process_row.queue_count = 0 THEN 0
+             ELSE
+                 (
+                     CONVERT(bigint, process_row.queue_number - 1)
+                     - (@rotationOffset % process_row.queue_count)
+                     + process_row.queue_count
+                 ) % process_row.queue_count
+         END,
+         process_row.id;"
 
         Using command As New SqlCommand(sql, connection)
             command.CommandTimeout = CommandTimeoutSeconds

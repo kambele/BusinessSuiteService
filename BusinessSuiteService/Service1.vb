@@ -1159,20 +1159,21 @@ Public Class Service1
                             form.Add(New FormValue("priority", "2"))
 
 
-                            PostForm(form, assignmentPage, task.id)
-
-                            task = db.tasks.Single(Function(f) f.id = task.id)
-                            app.date_allocated = Date.Now
-                            app.application = process.id
-
-                            db.SaveChanges()
+                            If AssignAutoTask(task, agent.id, assignmentPage, "microlending application allocation") Then
+                                task = db.tasks.Single(Function(f) f.id = task.id)
+                                app.date_allocated = Date.Now
+                                app.application = process.id
+                                db.SaveChanges()
+                            End If
 
                         Else
                             log("Assigning Type: " & process_type.assigning_type)
                             If process_type.assigning_type = "User Cluster" Then
                                 log(" >> Assessing: " & process_type.assigning_type)
                                 log(" || " & process_type.name & "(Task ID: " & task.id & ") : Assigning Type: " & process_type.assigning_type)
-                                Dim agents = db.GetNextTaskDefinitionAgent(task_definition.id).ToList.Distinct()
+                                'GetNextTaskDefinitionAgent expects the runtime task id. Passing the
+                                'definition id leaves the procedure without process/entity context.
+                                Dim agents = db.GetNextTaskDefinitionAgent(task.id).ToList.Distinct()
                                 log("Agents (" & process.external_reference & "): " & Newtonsoft.Json.JsonConvert.SerializeObject(agents))
                                 Dim clusterAgents As New List(Of Integer)
                                 For Each cluster In db.role_clusters.Where(Function(f) f.is_deleted = False And f.division = process.division And f.role = task.role)
@@ -1211,8 +1212,7 @@ Public Class Service1
                                             form.Add(New FormValue("assigned_to", agent.id))
                                             form.Add(New FormValue("cc_agents", ""))
                                             form.Add(New FormValue("priority", "2"))
-                                            PostForm(form, assignmentPage, task.id)
-                                            assigned = True
+                                            assigned = AssignAutoTask(task, agent.id, assignmentPage, "first-task role cluster")
                                         End If
                                         If assigned Then
                                             Exit For
@@ -1260,8 +1260,7 @@ Public Class Service1
                                     form.Add(New FormValue("assigned_to", agent.id))
                                     form.Add(New FormValue("cc_agents", ""))
                                     form.Add(New FormValue("priority", "2"))
-                                    PostForm(form, assignmentPage, task.id)
-                                    assigned = True
+                                    assigned = AssignAutoTask(task, agent.id, assignmentPage, "first-task user portfolio")
 
                                     If assigned Then
                                         Exit For
@@ -1507,7 +1506,7 @@ Public Class Service1
                     ToList()
             End If
             If preferredUsers.Count = 0 AndAlso taskRow.task_definition.HasValue Then
-                preferredUsers = db.GetNextTaskDefinitionAgent(taskRow.task_definition.Value).
+                preferredUsers = db.GetNextTaskDefinitionAgent(taskRow.id).
                     Where(Function(value) value.HasValue).
                     Select(Function(value) value.Value).
                     Distinct().
@@ -1585,7 +1584,24 @@ Public Class Service1
             New FormValue("cc_agents", ""),
             New FormValue("priority", "2")
         }
-        Return PostForm(form, assignmentPage, taskRow.id.ToString(CultureInfo.InvariantCulture))
+        Dim posted = PostForm(form, assignmentPage, taskRow.id.ToString(CultureInfo.InvariantCulture))
+        If posted AndAlso taskRow.process.HasValue Then
+            Dim taskOrder = taskRow.sort_order.GetValueOrDefault()
+            If taskOrder <= 0 AndAlso taskRow.task_definition.HasValue Then
+                Dim definition = db.task_definitions.FirstOrDefault(Function(value) value.id = taskRow.task_definition.Value)
+                If definition IsNot Nothing Then taskOrder = definition.sort_order.GetValueOrDefault()
+            End If
+
+            If taskOrder = 1 Then
+                Dim processRow = db.processes.FirstOrDefault(Function(value) value.id = taskRow.process.Value)
+                If processRow IsNot Nothing AndAlso (Not processRow.analyst.HasValue OrElse processRow.analyst.Value <= 0) Then
+                    processRow.analyst = userId
+                    db.SaveChanges()
+                    log("  | >> Process analyst updated to " & agent.username & ".")
+                End If
+            End If
+        End If
+        Return posted
     End Function
 
     Public Function PostForm(ByVal forms As List(Of FormValue), ByVal p As module_pages, ByVal dataID As String) As Boolean

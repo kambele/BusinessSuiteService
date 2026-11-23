@@ -325,6 +325,8 @@
     </None>
     <None Include="App.config" />
     <None Include="20261013_OptimizeServiceLoading.sql" />
+    <None Include="20261019_FixAutoAssignmentQueue.sql" />
+    <None Include="20261123_FixApplicationLoadingQueues.sql" />
     <None Include="packages.config" />
     <EntityDeploy Include="VSAB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
