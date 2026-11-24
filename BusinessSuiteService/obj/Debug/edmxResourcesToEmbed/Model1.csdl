@@ -749,6 +749,8 @@
     <Property Name="entity_groups" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="cluster_users" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="cluster_supervisor" Type="Int64" />
+    <Property Name="cluster_supervisors" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="form_types" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="start_date" Type="DateTime" Precision="0" />
     <Property Name="end_date" Type="DateTime" Precision="0" />
     <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />

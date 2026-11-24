@@ -1,4 +1,5 @@
 ﻿Imports System.Configuration
+Imports System.Data.Entity
 Imports System.Data.Entity.Core.Metadata.Edm
 Imports System.Data.SqlClient
 Imports System.Globalization
@@ -1171,60 +1172,9 @@ Public Class Service1
                             If process_type.assigning_type = "User Cluster" Then
                                 log(" >> Assessing: " & process_type.assigning_type)
                                 log(" || " & process_type.name & "(Task ID: " & task.id & ") : Assigning Type: " & process_type.assigning_type)
-                                'GetNextTaskDefinitionAgent expects the runtime task id. Passing the
-                                'definition id leaves the procedure without process/entity context.
-                                Dim agents = db.GetNextTaskDefinitionAgent(task.id).ToList.Distinct()
-                                log("Agents (" & process.external_reference & "): " & Newtonsoft.Json.JsonConvert.SerializeObject(agents))
-                                Dim clusterAgents As New List(Of Integer)
-                                For Each cluster In db.role_clusters.Where(Function(f) f.is_deleted = False And f.division = process.division And f.role = task.role)
-                                    If process.division = cluster.division Then
-                                        log("Checking Cluster:  (" & cluster.cluster_name & ")")
-                                        log(">> Groups:  (" & cluster.entity_groups & ")")
-                                        log(">> Users:  (" & cluster.cluster_users & ")")
-                                        log(">> Supervisor:  (" & cluster.cluster_supervisor & ")")
-                                        If Not cluster.entity_groups Is Nothing And String.IsNullOrEmpty(cluster.entity_groups) = False And Not cluster.cluster_users Is Nothing And String.IsNullOrEmpty(cluster.cluster_users) = False And Not cluster.cluster_supervisor Is Nothing And String.IsNullOrEmpty(cluster.cluster_supervisor) = False Then
-                                            For Each entity_type In cluster.entity_groups.Split(",")
-                                                Try
-                                                    If CInt(entity_type) = process.entity_type Then
-                                                        For Each cluster_user In cluster.cluster_users.Split(",")
-                                                            clusterAgents.Add(CInt(cluster_user))
-                                                        Next
-                                                    End If
-                                                Catch ex As Exception
-                                                    log("Cluster Agents: Error (" & process.external_reference & "): " & ex.Message)
-                                                    log("Cluster Agents: Error (" & process.external_reference & "): " & ex.StackTrace)
-                                                End Try
-                                            Next
-                                        End If
-
-                                    End If
-
-                                Next
-                                log("Cluster Agents (" & process.external_reference & "): " & Newtonsoft.Json.JsonConvert.SerializeObject(clusterAgents))
-                                For Each a In agents
-                                    Dim assigned = False
-                                    For Each ca In clusterAgents
-                                        If a = ca Then
-                                            Dim agent = db.users.Single(Function(f) f.id = a)
-                                            log("  | >> Next Agent: (" & agent.username & ")")
-                                            Dim form As New List(Of FormValue)
-                                            form.Add(New FormValue("description_of_activity", ""))
-                                            form.Add(New FormValue("assigned_to", agent.id))
-                                            form.Add(New FormValue("cc_agents", ""))
-                                            form.Add(New FormValue("priority", "2"))
-                                            assigned = AssignAutoTask(task, agent.id, assignmentPage, "first-task role cluster")
-                                        End If
-                                        If assigned Then
-                                            Exit For
-                                        End If
-
-                                    Next
-                                    If assigned Then
-                                        Exit For
-                                    End If
-
-
-                                Next
+                                If Not TryAssignFromRoleCluster(task, task_definition, process, assignmentPage) Then
+                                    log("  | >> No eligible role cluster matched the first task, including its configured form-type coverage.")
+                                End If
                             End If
 
                             If process_type.assigning_type = "User Portfolio" Then
@@ -1343,15 +1293,16 @@ Public Class Service1
             If assigningType.Equals("User Cluster", StringComparison.OrdinalIgnoreCase) Then
                 Dim cluster = FindRoleClusterForPreviousUser(processRow, lastRole.Value, lastTask.assigned_to.Value)
                 If cluster IsNot Nothing Then
+                    If processType.supervisory_role = currentRole Then
+                        Dim supervisorId = SelectRoleClusterSupervisor(cluster, taskRow)
+                        If supervisorId.HasValue AndAlso AssignAutoTask(taskRow, supervisorId.Value, assignmentPage, "balanced supervisor of the last completed task role cluster") Then Return True
+                    End If
                     If cluster.next_cluster.HasValue Then
                         Dim nextCluster = db.role_clusters.FirstOrDefault(Function(value) value.id = cluster.next_cluster.Value AndAlso Not value.is_deleted)
                         If nextCluster IsNot Nothing AndAlso nextCluster.role = currentRole AndAlso RoleClusterMatchesApplication(nextCluster, processRow) Then
                             Dim nextUser = SelectRoleClusterUser(nextCluster, taskRow)
                             If nextUser.HasValue AndAlso AssignAutoTask(taskRow, nextUser.Value, assignmentPage, "next role cluster from the last completed task") Then Return True
                         End If
-                    End If
-                    If processType.supervisory_role = currentRole AndAlso cluster.cluster_supervisor.HasValue Then
-                        If AssignAutoTask(taskRow, cluster.cluster_supervisor.Value, assignmentPage, "supervisor of the last completed task role cluster") Then Return True
                     End If
                 End If
             ElseIf assigningType.Equals("User Portfolio", StringComparison.OrdinalIgnoreCase) Then
@@ -1412,12 +1363,14 @@ Public Class Service1
         End If
 
         Dim today = Date.Today
+        Dim processFormType = ProcessFormTypeId(processRow)
         Dim clusters = db.role_clusters.
             Where(Function(value) Not value.is_deleted AndAlso value.role = roleId.Value AndAlso value.division = divisionId.Value).
             ToList().
             Where(Function(value) (Not value.start_date.HasValue OrElse value.start_date.Value.Date <= today) AndAlso
                                    (Not value.end_date.HasValue OrElse value.end_date.Value.Date >= today) AndAlso
-                                   CsvContains(value.entity_groups, processRow.entity_type.Value)).
+                                   CsvContains(value.entity_groups, processRow.entity_type.Value) AndAlso
+                                   RoleClusterMatchesFormType(value, processFormType)).
             OrderBy(Function(value) ParseCsvIds(value.entity_groups).Count).
             ThenBy(Function(value) value.id).
             ToList()
@@ -1474,6 +1427,7 @@ Public Class Service1
         Dim divisionId = ProcessDivisionId(processRow)
         If Not divisionId.HasValue OrElse Not processRow.entity_type.HasValue Then Return Nothing
         Dim today = Date.Today
+        Dim processFormType = ProcessFormTypeId(processRow)
         Return db.role_clusters.
             Where(Function(value) Not value.is_deleted AndAlso value.role = roleId AndAlso value.division = divisionId.Value).
             OrderBy(Function(value) value.id).
@@ -1481,7 +1435,8 @@ Public Class Service1
             FirstOrDefault(Function(value) (Not value.start_date.HasValue OrElse value.start_date.Value.Date <= today) AndAlso
                                            (Not value.end_date.HasValue OrElse value.end_date.Value.Date >= today) AndAlso
                                            CsvContains(value.entity_groups, processRow.entity_type.Value) AndAlso
-                                           (CsvContains(value.cluster_users, userId) OrElse CsvContains(value.cluster_alternative_users, userId) OrElse value.cluster_supervisor = userId))
+                                           RoleClusterMatchesFormType(value, processFormType) AndAlso
+                                           (CsvContains(value.cluster_users, userId) OrElse CsvContains(value.cluster_alternative_users, userId) OrElse CsvContains(value.cluster_supervisors, userId) OrElse value.cluster_supervisor = userId))
     End Function
 
     Private Function FindPortfolioForPreviousUser(ByVal processRow As process, ByVal roleId As Long, ByVal userId As Long) As user_portfolios
@@ -1505,12 +1460,15 @@ Public Class Service1
                     Distinct().
                     ToList()
             End If
-            If preferredUsers.Count = 0 AndAlso taskRow.task_definition.HasValue Then
-                preferredUsers = db.GetNextTaskDefinitionAgent(taskRow.id).
+            If taskRow.task_definition.HasValue Then
+                Dim roleCandidates = db.GetNextTaskDefinitionAgent(taskRow.id).
                     Where(Function(value) value.HasValue).
                     Select(Function(value) value.Value).
                     Distinct().
                     ToList()
+                For Each userId In roleCandidates
+                    If Not preferredUsers.Contains(userId) Then preferredUsers.Add(userId)
+                Next
             End If
         Catch ex As Exception
             log("  | >> Workload candidate lookup failed for task " & taskRow.id.ToString(CultureInfo.InvariantCulture) & ": " & ex.Message)
@@ -1530,7 +1488,37 @@ Public Class Service1
         For Each userId In alternativeUsers
             If IsAssignableUser(userId) Then Return userId
         Next
-        If cluster.cluster_supervisor.HasValue AndAlso IsAssignableUser(cluster.cluster_supervisor.Value) Then Return cluster.cluster_supervisor.Value
+        Return SelectRoleClusterSupervisor(cluster, taskRow)
+    End Function
+
+    Private Function SelectRoleClusterSupervisor(ByVal cluster As role_clusters, ByVal taskRow As task) As Nullable(Of Long)
+        Dim supervisors = ParseCsvIds(cluster.cluster_supervisors).
+            Where(Function(userId) IsAssignableUser(userId)).
+            ToList()
+
+        If supervisors.Count > 0 Then
+            Dim supervisorTasks = db.tasks.AsNoTracking().
+                Where(Function(value) Not value.is_deleted AndAlso value.assigned_to.HasValue AndAlso supervisors.Contains(value.assigned_to.Value)).
+                ToList()
+
+            Dim selectedUser = supervisors.
+                OrderBy(Function(userId) supervisorTasks.Where(Function(value) value.assigned_to = userId AndAlso (Not value.status.HasValue OrElse value.status.Value <> 4)).Count()).
+                ThenBy(Function(userId) supervisorTasks.
+                    Where(Function(value) value.assigned_to = userId AndAlso value.date_assigned.HasValue).
+                    Select(Function(value) value.date_assigned.Value).
+                    OrderByDescending(Function(value) value).
+                    FirstOrDefault()).
+                ThenBy(Function(userId) userId).
+                First()
+
+            log("  | >> Balanced supervisor pool selected user " & selectedUser.ToString(CultureInfo.InvariantCulture) & " from cluster " & cluster.id.ToString(CultureInfo.InvariantCulture) & ".")
+            Return selectedUser
+        End If
+
+        If cluster.cluster_supervisor.HasValue AndAlso IsAssignableUser(cluster.cluster_supervisor.Value) Then
+            log("  | >> Cluster " & cluster.id.ToString(CultureInfo.InvariantCulture) & " has no supervisor pool; using fallback supervisor " & cluster.cluster_supervisor.Value.ToString(CultureInfo.InvariantCulture) & ".")
+            Return cluster.cluster_supervisor.Value
+        End If
         Return Nothing
     End Function
 
@@ -1538,7 +1526,21 @@ Public Class Service1
         Dim divisionId = ProcessDivisionId(processRow)
         Return divisionId.HasValue AndAlso processRow.entity_type.HasValue AndAlso
                cluster.division = divisionId.Value AndAlso
-               CsvContains(cluster.entity_groups, processRow.entity_type.Value)
+               CsvContains(cluster.entity_groups, processRow.entity_type.Value) AndAlso
+               RoleClusterMatchesFormType(cluster, ProcessFormTypeId(processRow))
+    End Function
+
+    Private Function RoleClusterMatchesFormType(ByVal cluster As role_clusters, ByVal processFormType As Nullable(Of Long)) As Boolean
+        Dim configuredFormTypes = ParseCsvIds(cluster.form_types)
+        If configuredFormTypes.Count = 0 Then Return True
+        Return processFormType.HasValue AndAlso configuredFormTypes.Contains(processFormType.Value)
+    End Function
+
+    Private Function ProcessFormTypeId(ByVal processRow As process) As Nullable(Of Long)
+        If processRow Is Nothing OrElse Not processRow.activity_type.HasValue Then Return Nothing
+        Dim processType = db.process_types.FirstOrDefault(Function(value) value.id = processRow.activity_type.Value AndAlso Not value.is_deleted)
+        If processType Is Nothing Then Return Nothing
+        Return processType.form_type
     End Function
 
     Private Function EffectiveTaskRole(ByVal taskRow As task, ByVal definition As task_definitions) As Nullable(Of Long)

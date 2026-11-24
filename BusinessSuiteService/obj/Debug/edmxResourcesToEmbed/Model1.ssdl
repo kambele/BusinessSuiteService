@@ -411,6 +411,8 @@
     <Property Name="entity_groups" Type="varchar(max)" />
     <Property Name="cluster_users" Type="varchar(max)" />
     <Property Name="cluster_supervisor" Type="bigint" />
+    <Property Name="cluster_supervisors" Type="varchar(max)" />
+    <Property Name="form_types" Type="varchar(max)" />
     <Property Name="cluster_alternative_users" Type="varchar(max)" />
     <Property Name="start_date" Type="date" />
     <Property Name="end_date" Type="date" />

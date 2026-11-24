@@ -416,6 +416,8 @@
           <Property Name="entity_groups" Type="varchar(max)" />
           <Property Name="cluster_users" Type="varchar(max)" />
           <Property Name="cluster_supervisor" Type="bigint" />
+          <Property Name="cluster_supervisors" Type="varchar(max)" />
+          <Property Name="form_types" Type="varchar(max)" />
           <Property Name="cluster_alternative_users" Type="varchar(max)" />
           <Property Name="start_date" Type="date" />
           <Property Name="end_date" Type="date" />
@@ -1616,6 +1618,8 @@
           <Property Name="entity_groups" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="cluster_users" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="cluster_supervisor" Type="Int64" />
+          <Property Name="cluster_supervisors" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="form_types" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="start_date" Type="DateTime" Precision="0" />
           <Property Name="end_date" Type="DateTime" Precision="0" />
           <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
@@ -2338,6 +2342,8 @@
           <EntitySetMapping Name="role_clusters">
             <EntityTypeMapping TypeName="BusinessSuiteModel.role_clusters">
               <MappingFragment StoreEntitySet="role_clusters">
+                <ScalarProperty Name="form_types" ColumnName="form_types" />
+                <ScalarProperty Name="cluster_supervisors" ColumnName="cluster_supervisors" />
                 <ScalarProperty Name="next_cluster" ColumnName="next_cluster" />
                 <ScalarProperty Name="cluster_alternative_users" ColumnName="cluster_alternative_users" />
                 <ScalarProperty Name="updated_by" ColumnName="updated_by" />

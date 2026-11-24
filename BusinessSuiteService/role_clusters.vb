@@ -19,6 +19,8 @@ Partial Public Class role_clusters
     Public Property entity_groups As String
     Public Property cluster_users As String
     Public Property cluster_supervisor As Nullable(Of Long)
+    Public Property cluster_supervisors As String
+    Public Property form_types As String
     Public Property start_date As Nullable(Of Date)
     Public Property end_date As Nullable(Of Date)
     Public Property note As String

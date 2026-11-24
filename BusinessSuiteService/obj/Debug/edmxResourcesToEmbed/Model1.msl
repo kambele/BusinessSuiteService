@@ -456,6 +456,8 @@
     <EntitySetMapping Name="role_clusters">
       <EntityTypeMapping TypeName="BusinessSuiteModel.role_clusters">
         <MappingFragment StoreEntitySet="role_clusters">
+          <ScalarProperty Name="form_types" ColumnName="form_types" />
+          <ScalarProperty Name="cluster_supervisors" ColumnName="cluster_supervisors" />
           <ScalarProperty Name="next_cluster" ColumnName="next_cluster" />
           <ScalarProperty Name="cluster_alternative_users" ColumnName="cluster_alternative_users" />
           <ScalarProperty Name="updated_by" ColumnName="updated_by" />
