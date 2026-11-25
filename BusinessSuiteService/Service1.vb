@@ -27,6 +27,17 @@ Public Class Service1
     Private Const ConnString As String =
         "Server=YOUR_SERVER;Database=BusinessSuite;Trusted_Connection=True;TrustServerCertificate=True;"
 
+    Private Enum ClusterAssignmentResult
+        NoCandidate
+        Assigned
+        EarliestCandidatesFailed
+    End Enum
+
+    Private Class ClusterUserHistory
+        Public Property UserId As Long
+        Public Property LastAssigned As Nullable(Of Date)
+    End Class
+
     ' Limit to your enum if you don’t want every currency
     Private ReadOnly KeepSymbols As HashSet(Of String) =
         New HashSet(Of String)(StringComparer.OrdinalIgnoreCase) From {
@@ -913,16 +924,16 @@ Public Class Service1
 
                         If ServiceRuntime.IsEnabled("SynchronizeLoadingDates", True) Then
                             RunStep("SynchronizeLoadingDates", Sub()
-                                                                           Dim updatedRows = ServiceRuntime.SynchronizeLoadingDates(runLock)
-                                                                           log("SynchronizeLoadingDates: updated " & updatedRows.ToString() & " task(s).")
-                                                                       End Sub)
+                                                                   Dim updatedRows = ServiceRuntime.SynchronizeLoadingDates(runLock)
+                                                                   log("SynchronizeLoadingDates: updated " & updatedRows.ToString() & " task(s).")
+                                                               End Sub)
                         End If
 
                         If ServiceRuntime.IsEnabled("UpdateTaskSortOrder") Then
                             RunStep("UpdateTaskSortOrder", Sub()
-                                                                     Dim updatedRows = ServiceRuntime.UpdateMissingTaskSortOrders(runLock)
-                                                                     log("UpdateTaskSortOrder: updated " & updatedRows.ToString() & " task(s).")
-                                                                 End Sub)
+                                                               Dim updatedRows = ServiceRuntime.UpdateMissingTaskSortOrders(runLock)
+                                                               log("UpdateTaskSortOrder: updated " & updatedRows.ToString() & " task(s).")
+                                                           End Sub)
                         End If
 
                         If ServiceRuntime.IsEnabled("ExecuteAutoAssignRun") Then
@@ -1172,7 +1183,7 @@ Public Class Service1
                             If process_type.assigning_type = "User Cluster" Then
                                 log(" >> Assessing: " & process_type.assigning_type)
                                 log(" || " & process_type.name & "(Task ID: " & task.id & ") : Assigning Type: " & process_type.assigning_type)
-                                If Not TryAssignFromRoleCluster(task, task_definition, process, assignmentPage) Then
+                                If AssignFromRoleClusters(task, task_definition, process, assignmentPage) = ClusterAssignmentResult.NoCandidate Then
                                     log("  | >> No eligible role cluster matched the first task, including its configured form-type coverage.")
                                 End If
                             End If
@@ -1328,22 +1339,23 @@ Public Class Service1
                                                        ByVal assignmentPage As module_pages) As Boolean
         Try
             Dim assigningType = (processType.assigning_type & String.Empty).Trim()
-            If assigningType.Equals("User Cluster", StringComparison.OrdinalIgnoreCase) Then
-                log("  | >> Resolving application ownership through role clusters.")
-                If TryAssignFromRoleCluster(taskRow, definition, processRow, assignmentPage) Then Return True
-                log("  | >> No role-cluster assignment was resolved; checking user portfolios.")
-                Return TryAssignFromUserPortfolio(taskRow, definition, processRow, assignmentPage)
-            End If
             If assigningType.Equals("User Portfolio", StringComparison.OrdinalIgnoreCase) Then
                 log("  | >> Resolving application ownership through user portfolios.")
                 If TryAssignFromUserPortfolio(taskRow, definition, processRow, assignmentPage) Then Return True
                 log("  | >> No user-portfolio assignment was resolved; checking role clusters.")
-                Return TryAssignFromRoleCluster(taskRow, definition, processRow, assignmentPage)
+                Return AssignFromRoleClusters(taskRow, definition, processRow, assignmentPage) = ClusterAssignmentResult.Assigned
             End If
 
-            log("  | >> Assigning type is not configured; checking role clusters, then user portfolios.")
-            If TryAssignFromRoleCluster(taskRow, definition, processRow, assignmentPage) Then Return True
-            Return TryAssignFromUserPortfolio(taskRow, definition, processRow, assignmentPage)
+            log("  | >> Resolving application ownership through role clusters.")
+            Select Case AssignFromRoleClusters(taskRow, definition, processRow, assignmentPage)
+                Case ClusterAssignmentResult.Assigned
+                    Return True
+                Case ClusterAssignmentResult.NoCandidate
+                    log("  | >> No role-cluster candidate was found; checking user portfolios.")
+                    Return TryAssignFromUserPortfolio(taskRow, definition, processRow, assignmentPage)
+                Case Else
+                    Return False
+            End Select
         Catch ex As Exception
             log("  | >> Application ownership assignment failed: " & ex.Message)
             log(ex.StackTrace)
@@ -1351,15 +1363,19 @@ Public Class Service1
         End Try
     End Function
 
-    Private Function TryAssignFromRoleCluster(ByVal taskRow As task,
-                                              ByVal definition As task_definitions,
-                                              ByVal processRow As process,
-                                              ByVal assignmentPage As module_pages) As Boolean
+    Private Function AssignFromRoleClusters(ByVal taskRow As task,
+                                            ByVal definition As task_definitions,
+                                            ByVal processRow As process,
+                                            ByVal assignmentPage As module_pages) As ClusterAssignmentResult
         Dim roleId = EffectiveTaskRole(taskRow, definition)
         Dim divisionId = ProcessDivisionId(processRow)
         If Not roleId.HasValue OrElse Not divisionId.HasValue OrElse Not processRow.entity_type.HasValue Then
             log("  | >> Role-cluster fallback requires task role, process division, and entity type.")
-            Return False
+            Return ClusterAssignmentResult.NoCandidate
+        End If
+        If processRow.process_definition.GetValueOrDefault() <= 0 Then
+            log("  | >> Role-cluster assignment requires a process definition to rank users by assignment history.")
+            Return ClusterAssignmentResult.NoCandidate
         End If
 
         Dim today = Date.Today
@@ -1375,16 +1391,90 @@ Public Class Service1
             ThenBy(Function(value) value.id).
             ToList()
 
+        ' Pool ordinary members across clusters before considering alternatives or supervisors.
+        ' Keep one cluster per user for logging, not for ranking the user.
+        Dim primary As New Dictionary(Of Long, role_clusters)()
+        Dim alternatives As New Dictionary(Of Long, role_clusters)()
         For Each cluster In clusters
-            Dim userId = SelectRoleClusterUser(cluster, taskRow)
-            If userId.HasValue Then
-                log("  | >> Application matched role cluster: " & cluster.cluster_name)
-                If AssignAutoTask(taskRow, userId.Value, assignmentPage, "application role cluster " & cluster.cluster_name) Then Return True
-            End If
+            For Each userId In ParseCsvIds(cluster.cluster_users)
+                If Not primary.ContainsKey(userId) Then primary.Add(userId, cluster)
+            Next
+            For Each userId In ParseCsvIds(cluster.cluster_alternative_users)
+                If Not alternatives.ContainsKey(userId) Then alternatives.Add(userId, cluster)
+            Next
         Next
 
-        log("  | >> No active role cluster matched division " & divisionId.Value.ToString(CultureInfo.InvariantCulture) & ", role " & roleId.Value.ToString(CultureInfo.InvariantCulture) & ", and entity type " & processRow.entity_type.Value.ToString(CultureInfo.InvariantCulture) & ".")
-        Return False
+        Dim supervisorPools = clusters.Select(Function(cluster) New With {.Cluster = cluster, .SupervisorIds = ParseCsvIds(cluster.cluster_supervisors)}).ToList()
+        Dim candidateIds = primary.Keys.Union(alternatives.Keys).
+            Union(supervisorPools.SelectMany(Function(pool) pool.SupervisorIds)).
+            Union(clusters.Where(Function(cluster) cluster.cluster_supervisor.GetValueOrDefault() > 0).
+                  Select(Function(cluster) cluster.cluster_supervisor.Value)).ToList()
+        If candidateIds.Count > 0 Then
+            Dim ranked = RankClusterUsers(db.users.AsNoTracking(), db.tasks.AsNoTracking(), db.processes.AsNoTracking(),
+                                          processRow.process_definition.Value, candidateIds).ToList()
+            Dim activeIds As New HashSet(Of Long)(ranked.Select(Function(candidate) candidate.UserId))
+            Dim supervisors As New Dictionary(Of Long, role_clusters)()
+            For Each pool In supervisorPools
+                Dim eligible = pool.SupervisorIds.Where(Function(userId) activeIds.Contains(userId)).ToList()
+                Dim fallback = pool.Cluster.cluster_supervisor
+                If eligible.Count = 0 AndAlso fallback.HasValue AndAlso activeIds.Contains(fallback.Value) Then eligible.Add(fallback.Value)
+                For Each userId In eligible
+                    If Not supervisors.ContainsKey(userId) Then supervisors.Add(userId, pool.Cluster)
+                Next
+            Next
+
+            Dim result = AssignEarliestClusterUser(ranked, {primary, alternatives, supervisors},
+                Function(userId, cluster) AssignAutoTask(taskRow, userId, assignmentPage, "earliest last assignment for the process definition, role cluster " & cluster.cluster_name))
+            If result = ClusterAssignmentResult.EarliestCandidatesFailed Then
+                log("  | >> The earliest role-cluster candidate(s) could not be assigned. Leaving task " & taskRow.id.ToString(CultureInfo.InvariantCulture) & " for retry.")
+            End If
+            If result <> ClusterAssignmentResult.NoCandidate Then Return result
+        End If
+
+        log("  | >> No assignable role-cluster user found for division " & divisionId.Value.ToString(CultureInfo.InvariantCulture) & ", role " & roleId.Value.ToString(CultureInfo.InvariantCulture) & ", and entity type " & processRow.entity_type.Value.ToString(CultureInfo.InvariantCulture) & ".")
+        Return ClusterAssignmentResult.NoCandidate
+    End Function
+
+    Private Shared Function AssignEarliestClusterUser(ByVal ranked As IEnumerable(Of ClusterUserHistory),
+                                                      ByVal pools As IEnumerable(Of Dictionary(Of Long, role_clusters)),
+                                                      ByVal assign As Func(Of Long, role_clusters, Boolean)) As ClusterAssignmentResult
+        For Each pool In pools
+            Dim found As Boolean = False
+            Dim earliest As Nullable(Of Date) = Nothing
+            For Each candidate In ranked
+                Dim cluster As role_clusters = Nothing
+                If Not pool.TryGetValue(candidate.UserId, cluster) Then Continue For
+                If Not found Then
+                    found = True
+                    earliest = candidate.LastAssigned
+                ElseIf Not Nullable.Equals(earliest, candidate.LastAssigned) Then
+                    Exit For
+                End If
+                If assign(candidate.UserId, cluster) Then Return ClusterAssignmentResult.Assigned
+            Next
+            ' A failed attempt must not advance to a more recent user or a lower-priority pool.
+            If found Then Return ClusterAssignmentResult.EarliestCandidatesFailed
+        Next
+        Return ClusterAssignmentResult.NoCandidate
+    End Function
+
+    Private Shared Function RankClusterUsers(ByVal accounts As IQueryable(Of user),
+                                             ByVal taskRecords As IQueryable(Of task),
+                                             ByVal processRecords As IQueryable(Of process),
+                                             ByVal processDefinitionId As Long,
+                                             ByVal candidateIds As List(Of Long)) As IQueryable(Of ClusterUserHistory)
+        Dim definitionTasks = From pastTask In taskRecords
+                              Join application In processRecords On pastTask.process Equals CType(application.id, Nullable(Of Long))
+                              Where application.process_definition.HasValue AndAlso application.process_definition.Value = processDefinitionId AndAlso
+                                    Not pastTask.is_deleted AndAlso pastTask.assigned_to.HasValue AndAlso pastTask.date_assigned.HasValue
+                              Select pastTask
+
+        ' MAX considers the latest task regardless of status or role. NULL sorts first for new assignees.
+        Return From account In accounts
+               Where Not account.is_deleted AndAlso candidateIds.Contains(account.id)
+               Let lastAssigned = definitionTasks.Where(Function(pastTask) pastTask.assigned_to.Value = account.id).Max(Function(pastTask) pastTask.date_assigned)
+               Order By lastAssigned, account.id
+               Select New ClusterUserHistory With {.UserId = account.id, .LastAssigned = lastAssigned}
     End Function
 
     Private Function TryAssignFromUserPortfolio(ByVal taskRow As task,
