@@ -30,8 +30,6 @@ Public Class Helper
                 parseCondition = parseCondition.Replace("[" & s & "]", "'" & v & "'")
 
             Next
-            Service1.log("CheckCondition: Condition Parsed: " & parseCondition)
-
             result = ExecuteConditionQuery(parseCondition)
 
         Else
@@ -43,7 +41,6 @@ Public Class Helper
     Public Shared Function GetQueryValue(ByVal query As String) As String
         Dim value As String = ""
         Dim conn As New SqlConnection(ConfigurationManager.AppSettings.Get("DB"))
-        Service1.log("GetQueryValue: Query: " & query)
         Try
 
             conn.Open()
@@ -58,12 +55,11 @@ Public Class Helper
                 End If
             Next row
         Catch ex As Exception
-            'Service1.log("GetQueryValue: Exception: " & ex.Message)
+            Service1.LogFailure("Read application condition value", ex)
         Finally
             conn.Close()
 
         End Try
-        Service1.log("GetQueryValue: Value: " & value)
         Return value
     End Function
     Public Shared Function ExecuteConditionQuery(ByVal query As String) As Boolean
@@ -78,7 +74,6 @@ Public Class Helper
             If sql.StartsWith("Select") = False And sql.StartsWith("SELECT") = False And sql.StartsWith("select") = False Then
                 sql = "SELECT 1 WHERE " & sql
             End If
-            'Service1.log("ExecuteConditionQuery: Query: " & sql)
             Try
                 Dim a As SqlDataAdapter = New SqlDataAdapter(sql, conn)
 
@@ -88,12 +83,12 @@ Public Class Helper
                     evaluated = True
                 Next
             Catch ex As Exception
-                'Service1.log("ExecuteConditionQuery: Exception: " & ex.Message)
+                Service1.LogFailure("Evaluate application condition", ex)
             Finally
                 conn.Close()
             End Try
         Catch ex As Exception
-            'Service1.log("ExecuteConditionQuery: Exception: " & ex.Message)
+            Service1.LogFailure("Open application condition database", ex)
         End Try
 
 

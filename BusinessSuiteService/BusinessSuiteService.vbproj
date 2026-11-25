@@ -237,6 +237,7 @@
     <Compile Include="role_clusters.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="ServiceLog.vb" />
     <Compile Include="ServiceRuntime.vb" />
     <Compile Include="Service1.vb">
       <SubType>Component</SubType>

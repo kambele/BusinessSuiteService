@@ -10,7 +10,6 @@ Imports System.Text
 Imports System.Text.Json
 Imports System.Threading
 Imports System.Diagnostics
-Imports Newtonsoft.Json
 
 Public Class Service1
 
@@ -20,9 +19,7 @@ Public Class Service1
 
     Public t2 As Thread
     Private ReadOnly stopSignal As New ManualResetEventSlim(False)
-    Private Shared ReadOnly logSync As New Object()
-    Private Shared logWriter As IO.StreamWriter
-    Private Shared logWriterDate As Date = Date.MinValue
+    Private Shared ReadOnly workflowLog As ServiceLog = ServiceLog.FromSettings()
 
     Private Const ConnString As String =
         "Server=YOUR_SERVER;Database=BusinessSuite;Trusted_Connection=True;TrustServerCertificate=True;"
@@ -45,6 +42,7 @@ Public Class Service1
         }
     Protected Overrides Sub OnStart(ByVal args() As String)
         stopSignal.Reset()
+        workflowLog.Write(WorkflowLogLevel.Info, "Workflow service started.")
         t2 = New Thread(AddressOf ExecuteAutoAssign)
         t2.IsBackground = True
         t2.Name = "BusinessSuite workflow worker"
@@ -54,9 +52,7 @@ Public Class Service1
     Public Sub CheckAnnualCancellations()
         log("Starting Executing: CheckAnnualCancellations")
         For Each entity In db.entities.Where(Function(f) f.expiry_flag = "Queued for Cancallation" And f.is_deleted = False)
-            log(">> Entity Found: Queued for Cancallation")
-            log("")
-            log("Entity Name: " & entity.entity_name & "(License: " & entity.license_number & ") Expiry Date: " & entity.license_expriy_date)
+            log("Annual cancellation: entity " & entity.id.ToString(CultureInfo.InvariantCulture) & ".")
 
             Try
                 Dim forms As New List(Of FormValue)
@@ -77,15 +73,9 @@ Public Class Service1
                     param.Add(v.Name, v.Value)
                 Next
 
-                log(JsonConvert.SerializeObject(param))
-                log("")
-                log("")
                 SubmitForm(param)
             Catch ex As Exception
-                log("      ---- Error: ")
-                log("           >> To be cancelled: ")
-                log("                  Entity Name: " & entity.entity_name & "(License: " & entity.license_number & "")
-                log("      ---- Error: " & ex.Message)
+                LogFailure("Annual cancellation", ex, "entity " & entity.id.ToString(CultureInfo.InvariantCulture))
             End Try
 
         Next
@@ -141,23 +131,17 @@ Public Class Service1
 
 
                         Catch ex As Exception
-                            log("      ---- Error: ")
-                            log("           >> Unable to Close 7 Days: ")
-                            log("      ---- Error: " & ex.Message)
-                            log("      ---- Error: " & ex.StackTrace)
+                            LogFailure("Close overdue return task", ex, "task " & activeTask.id.ToString(CultureInfo.InvariantCulture))
                         End Try
                     Else
-                        log("      ---- Error: Active Task Not Found: " & process.name)
+                        workflowLog.Write(WorkflowLogLevel.Warning, "Return period check found no active task for process " & process.id.ToString(CultureInfo.InvariantCulture) & ".", "Return period missing active task")
                     End If
 
 
 
 
                 Catch ex As Exception
-                    log("      ---- Error: ")
-                    log("           >> Unable to Close 7 Days: " & r.external_reference)
-                    log("      ---- Error: " & ex.Message)
-                    log("      ---- Error: " & ex.StackTrace)
+                    LogFailure("Check overdue returned process", ex, "process " & r.id.ToString(CultureInfo.InvariantCulture))
                 End Try
 
             Next
@@ -219,12 +203,10 @@ Public Class Service1
                 End If
 
                 If Not executed Then
-                    log(" Error: Error   ||> No Task to open")
+                    workflowLog.Write(WorkflowLogLevel.Warning, "Resubmission found no task to open for process " & process.id.ToString(CultureInfo.InvariantCulture) & ".", "Resubmission missing task")
                 End If
             Catch ex As Exception
-                log("      ---- Error: ")
-                log("           >> Unable to Close 7 Days: ")
-                log("      ---- Error: " & ex.Message)
+                LogFailure("Check resubmission", ex)
             End Try
 
 
@@ -273,10 +255,7 @@ Public Class Service1
                         PostForm(forms, db.module_pages.Find(40992), activeTask.id)
                         executed = True
                     Catch ex As Exception
-                        log("      ---- Error: ")
-                        log("           >> Unable to Close 7 Days: ")
-                        log("      ---- Error: " & ex.Message)
-                        log("      ---- Error: " & ex.StackTrace)
+                        LogFailure("Start returned task period", ex, "task " & activeTask.id.ToString(CultureInfo.InvariantCulture))
                     End Try
                 End If
 
@@ -287,10 +266,7 @@ Public Class Service1
 
 
             Catch ex As Exception
-                log("      ---- Error: ")
-                log("           >> Unable to Close 7 Days: ")
-                log("      ---- Error: " & ex.Message)
-                log("      ---- Error: " & ex.StackTrace)
+                LogFailure("Check returned process", ex, "process " & r.id.ToString(CultureInfo.InvariantCulture))
             End Try
 
         Next
@@ -304,9 +280,7 @@ Public Class Service1
                 CheckResubmissionExecute()
                 ''Thread.Sleep(60000 * CInt(ConfigurationManager.AppSettings.Get("SleepInMinutes")))
             Catch ex As Exception
-                log("      ---- Error: ")
-                log("           >> Unable to Close 7 Days: ")
-                log("      ---- Error: " & ex.Message)
+                LogFailure("Run resubmission check", ex)
             End Try
 
         Loop
@@ -576,13 +550,13 @@ Public Class Service1
 
         If t2 IsNot Nothing AndAlso t2.IsAlive Then
             If Not t2.Join(ServiceRuntime.StopWait) Then
-                log("Service stop is waiting for the active workflow step to finish.")
+                workflowLog.Write(WorkflowLogLevel.Warning, "Service stop is waiting for the active workflow step to finish.")
                 Return
             End If
         End If
 
         DisposeDataContexts()
-        CloseLogWriter()
+        workflowLog.Close()
     End Sub
 
     'Public Sub execute()
@@ -603,47 +577,17 @@ Public Class Service1
 
     'End Sub
 
-    Public Shared Sub log(ByVal msg As String, Optional debug As Boolean = False)
-        Try
-            Dim d = ConfigurationManager.AppSettings.Get("Debug")
-            If d = "1" Then
-                debug = True
-            End If
-            If debug Then
-                SyncLock logSync
-                    Dim currentDate = Date.Today
-                    If logWriter Is Nothing OrElse logWriterDate <> currentDate Then
-                        CloseLogWriterUnsafe()
-                        IO.Directory.CreateDirectory("C:\Debug")
-                        Dim logPath = IO.Path.Combine("C:\Debug", "BusinessSuiteWorkflow-" & currentDate.ToString("yyyy-MM-dd") & ".txt")
-                        logWriter = New IO.StreamWriter(logPath, True, Encoding.UTF8) With {.AutoFlush = True}
-                        logWriterDate = currentDate
-                    End If
-
-                    logWriter.WriteLine(Date.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") & ": " & msg)
-                End SyncLock
-            End If
-        Catch ex As Exception
-
-        End Try
-
+    Public Shared Sub log(ByVal msg As String)
+        workflowLog.Write(WorkflowLogLevel.Debug, msg)
     End Sub
 
-    Private Shared Sub CloseLogWriter()
-        SyncLock logSync
-            CloseLogWriterUnsafe()
-        End SyncLock
-    End Sub
-
-    Private Shared Sub CloseLogWriterUnsafe()
-        If logWriter IsNot Nothing Then
-            logWriter.Dispose()
-            logWriter = Nothing
-        End If
+    Friend Shared Sub LogFailure(ByVal operation As String, ByVal ex As Exception, Optional ByVal context As String = Nothing)
+        workflowLog.Failure(operation, ex, context)
     End Sub
 
     Public Sub Update()
         log("Update: Started: ")
+        Dim submittedCount = 0
         Try
 
 
@@ -717,17 +661,12 @@ Public Class Service1
                                                 log("           >> To be added: " & s.reference & " - " & s.submission_pack_name)
                                                 Dim m = db.modules.Find(10017)
                                                 Dim page = db.module_pages.Find(40596)
-                                                log("")
-                                                log("")
-                                                For Each i In page.module_page_items.Where(Function(f) f.is_show)
-                                                    log(" - " & i.module_items.database_column)
-                                                Next
                                                 Try
                                                     Dim forms As New List(Of FormValue)
 
                                                     Dim entity = db.entities.SingleOrDefault(Function(f) f.entity_instance_id = s.entity_instance_id And f.is_deleted = False)
                                                     If entity Is Nothing Then
-                                                        log("      ---- Application skipped: no active Business Suite entity mapping for entity_instance_id " & s.entity_instance_id.ToString() & " (" & s.reference & ")")
+                                                        workflowLog.Write(WorkflowLogLevel.Warning, "Application loading skipped an unmapped entity instance " & s.entity_instance_id.ToString() & ".", "Application loading missing entity mapping")
                                                         Continue For
                                                     End If
 
@@ -767,14 +706,10 @@ Public Class Service1
                                                         param.Add(v.Name, v.Value)
                                                     Next
 
-                                                    log(JsonConvert.SerializeObject(param))
-                                                    log("")
-                                                    log("")
                                                     SubmitForm(param)
+                                                    submittedCount += 1
                                                 Catch ex As Exception
-                                                    log("      ---- Error: ")
-                                                    log("           >> To be added: " & s.reference & " - " & s.submission_pack_name)
-                                                    log("      ---- Error: " & ex.Message)
+                                                    LogFailure("Submit loaded application", ex, "process type " & td.id.ToString(CultureInfo.InvariantCulture))
                                                 End Try
 
                                             End If
@@ -786,8 +721,7 @@ Public Class Service1
 
                                     Next
                                 Catch ex As Exception
-                                    log("Updating Error: " & ex.Message)
-                                    log("Updating Error: " & ex.StackTrace)
+                                    LogFailure("Load submissions for entity type", ex, "process type " & td.id.ToString(CultureInfo.InvariantCulture))
                                 End Try
 
                             Next
@@ -796,12 +730,12 @@ Public Class Service1
 
 
                         Catch ex As Exception
-                            log("Updating: >> Process Type: " & td.name & " >>  Form Type: " & form.form_name & " >> Entity Group: " & td.entity_group & ": Not found...")
+                            LogFailure("Resolve application entity group", ex, "process type " & td.id.ToString(CultureInfo.InvariantCulture))
                         End Try
 
 
                     Catch ex As Exception
-                        log("Updating: >>  Process Type: " & td.name & " >> Form Type: " & td.form_type & ": Not found...")
+                        LogFailure("Resolve application form type", ex, "process type " & td.id.ToString(CultureInfo.InvariantCulture))
                     End Try
 
                     ''Update Processes vs Tasks
@@ -847,10 +781,9 @@ Public Class Service1
             End If
             ''log("Ending...")
         Catch ex As Exception
-            log("Updating Error: " & ex.Message)
-            log("Updating Error: " & ex.StackTrace)
+            LogFailure("Update applications", ex)
         End Try
-        log("Update: Completed: ")
+        If submittedCount > 0 Then workflowLog.Write(WorkflowLogLevel.Info, $"Application loading: submitted={submittedCount}.")
     End Sub
 
     Public Sub UpdateEntities()
@@ -925,14 +858,14 @@ Public Class Service1
                         If ServiceRuntime.IsEnabled("SynchronizeLoadingDates", True) Then
                             RunStep("SynchronizeLoadingDates", Sub()
                                                                    Dim updatedRows = ServiceRuntime.SynchronizeLoadingDates(runLock)
-                                                                   log("SynchronizeLoadingDates: updated " & updatedRows.ToString() & " task(s).")
+                                                                   If updatedRows > 0 Then workflowLog.Write(WorkflowLogLevel.Info, $"SynchronizeLoadingDates: updated={updatedRows}.")
                                                                End Sub)
                         End If
 
                         If ServiceRuntime.IsEnabled("UpdateTaskSortOrder") Then
                             RunStep("UpdateTaskSortOrder", Sub()
                                                                Dim updatedRows = ServiceRuntime.UpdateMissingTaskSortOrders(runLock)
-                                                               log("UpdateTaskSortOrder: updated " & updatedRows.ToString() & " task(s).")
+                                                               If updatedRows > 0 Then workflowLog.Write(WorkflowLogLevel.Info, $"UpdateTaskSortOrder: updated={updatedRows}.")
                                                            End Sub)
                         End If
 
@@ -966,8 +899,7 @@ Public Class Service1
                     End If
                 End Using
             Catch ex As Exception
-                log("Workflow cycle failed: " & ex.Message)
-                log(ex.StackTrace)
+                LogFailure("Workflow cycle", ex)
             Finally
                 DisposeDataContexts()
             End Try
@@ -984,7 +916,8 @@ Public Class Service1
         Loop
 
         DisposeDataContexts()
-        CloseLogWriter()
+        workflowLog.Write(WorkflowLogLevel.Info, "Workflow service stopped.")
+        workflowLog.Close()
 
     End Sub
 
@@ -996,8 +929,7 @@ Public Class Service1
             work()
             log(stepName & ": Completed in " & timer.Elapsed.ToString("c"))
         Catch ex As Exception
-            log(stepName & ": Failed: " & ex.Message)
-            log(stepName & ": Failed: " & ex.StackTrace)
+            LogFailure(stepName, ex)
         End Try
     End Sub
 
@@ -1045,9 +977,8 @@ Public Class Service1
             End If
         Next
 
-        log("TrackStatusChange: processed " & completed.ToString(CultureInfo.InvariantCulture) &
-            " of " & processIds.Count.ToString(CultureInfo.InvariantCulture) &
-            " pending change(s); failures: " & failed.ToString(CultureInfo.InvariantCulture) & ".")
+        workflowLog.Write(If(failed > 0, WorkflowLogLevel.Warning, WorkflowLogLevel.Info),
+                          $"TrackStatusChange: pending={processIds.Count}, processed={completed}, failed={failed}.")
     End Sub
 
     Private Sub ResetDataContexts()
@@ -1125,7 +1056,10 @@ Public Class Service1
             ToDictionary(Function(processType) processType.id)
         Dim assignmentPage = db.module_pages.Single(Function(page) page.id = 10095)
 
-        Dim count = 0
+        Dim assignedCount = 0
+        Dim unassignedCount = 0
+        Dim skippedCount = 0
+        Dim errorCount = 0
         For Each taskId In taskIds
             Try
                 Dim task As task = Nothing
@@ -1133,6 +1067,7 @@ Public Class Service1
                    Not task.process.HasValue OrElse
                    Not task.task_definition.HasValue Then
                     log("ExecuteAutoAssignRun: task " & taskId.ToString() & " has incomplete configuration and was skipped.")
+                    skippedCount += 1
                     Continue For
                 End If
 
@@ -1142,17 +1077,20 @@ Public Class Service1
                    Not processesById.TryGetValue(task.process.Value, process) OrElse
                    Not process.activity_type.HasValue Then
                     log("ExecuteAutoAssignRun: task " & taskId.ToString() & " has no valid definition or process and was skipped.")
+                    skippedCount += 1
                     Continue For
                 End If
 
                 Dim process_type As process_types = Nothing
                 If Not processTypesById.TryGetValue(process.activity_type.Value, process_type) Then
                     log("ExecuteAutoAssignRun: process " & process.id.ToString() & " has no valid process type and was skipped.")
+                    skippedCount += 1
                     Continue For
                 End If
 
                 If process_type.enable_auto_assign = True Then
-                    log(" >> Found: (" & process.external_reference & ": " & process.name & ") >> (" & task.id & ": " & task.name & ") " & task.task_definition)
+                    Dim assigned = False
+                    log($"Auto-assignment: process {process.id}, task {task.id}, definition {task.task_definition}.")
                     ''First Task
                     log(" || Sort Order: " & task_definition.sort_order)
                     If task_definition.sort_order = 1 Then
@@ -1171,7 +1109,8 @@ Public Class Service1
                             form.Add(New FormValue("priority", "2"))
 
 
-                            If AssignAutoTask(task, agent.id, assignmentPage, "microlending application allocation") Then
+                            assigned = AssignAutoTask(task, agent.id, assignmentPage, "microlending application allocation")
+                            If assigned Then
                                 task = db.tasks.Single(Function(f) f.id = task.id)
                                 app.date_allocated = Date.Now
                                 app.application = process.id
@@ -1183,7 +1122,9 @@ Public Class Service1
                             If process_type.assigning_type = "User Cluster" Then
                                 log(" >> Assessing: " & process_type.assigning_type)
                                 log(" || " & process_type.name & "(Task ID: " & task.id & ") : Assigning Type: " & process_type.assigning_type)
-                                If AssignFromRoleClusters(task, task_definition, process, assignmentPage) = ClusterAssignmentResult.NoCandidate Then
+                                Dim clusterResult = AssignFromRoleClusters(task, task_definition, process, assignmentPage)
+                                assigned = clusterResult = ClusterAssignmentResult.Assigned
+                                If clusterResult = ClusterAssignmentResult.NoCandidate Then
                                     log("  | >> No eligible role cluster matched the first task, including its configured form-type coverage.")
                                 End If
                             End If
@@ -1211,7 +1152,6 @@ Public Class Service1
                                     End If
 
                                 Next
-                                Dim assigned = False
                                 For Each up In userPortfolio
 
                                     Dim agent = db.users.Single(Function(f) f.id = up)
@@ -1235,7 +1175,7 @@ Public Class Service1
                     ''If that user/role path cannot resolve an assignee, use the application's
                     ''role-cluster or user-portfolio membership as the deterministic fallback.
                     If task_definition.sort_order <> 1 Then
-                        Dim assigned = TryAssignFromLastCompletedTask(task, task_definition, process, process_type, assignmentPage)
+                        assigned = TryAssignFromLastCompletedTask(task, task_definition, process, process_type, assignmentPage)
                         If Not assigned Then
                             log("  | >> Previous-task assignment was not resolved. Assessing application ownership.")
                             assigned = TryAssignFromApplicationOwnership(task, task_definition, process, process_type, assignmentPage)
@@ -1244,20 +1184,27 @@ Public Class Service1
                             log("  | >> No eligible role cluster or user portfolio assignment was found for task " & task.id.ToString(CultureInfo.InvariantCulture) & ".")
                         End If
                     End If
-                    count = count + 1
+                    If assigned Then
+                        assignedCount += 1
+                    Else
+                        unassignedCount += 1
+                    End If
+                Else
+                    skippedCount += 1
                 End If
 
 
             Catch ex As Exception
-                log(" >> Exception: " & ex.Message)
-                log(ex.StackTrace)
-                log(Newtonsoft.Json.JsonConvert.SerializeObject(ex))
+                errorCount += 1
+                LogFailure("Auto-assignment task", ex, "task " & taskId.ToString(CultureInfo.InvariantCulture))
             End Try
 
 
 
 
         Next
+        Dim level = If(unassignedCount > 0 OrElse skippedCount > 0 OrElse errorCount > 0, WorkflowLogLevel.Warning, WorkflowLogLevel.Info)
+        workflowLog.Write(level, $"Auto-assignment: queued={taskIds.Count}, assigned={assignedCount}, unassigned={unassignedCount}, skipped={skippedCount}, errors={errorCount}.")
     End Sub
 
     Private Function TryAssignFromLastCompletedTask(ByVal taskRow As task,
@@ -1326,8 +1273,7 @@ Public Class Service1
             log("  | >> Last completed task " & lastTask.id.ToString(CultureInfo.InvariantCulture) & " did not determine an assignee for role " & currentRole.Value.ToString(CultureInfo.InvariantCulture) & ".")
             Return False
         Catch ex As Exception
-            log("  | >> Previous-task assignment failed: " & ex.Message)
-            log(ex.StackTrace)
+            LogFailure("Assignment from previous task", ex, "task " & taskRow.id.ToString(CultureInfo.InvariantCulture))
             Return False
         End Try
     End Function
@@ -1357,8 +1303,7 @@ Public Class Service1
                     Return False
             End Select
         Catch ex As Exception
-            log("  | >> Application ownership assignment failed: " & ex.Message)
-            log(ex.StackTrace)
+            LogFailure("Assignment from application ownership", ex, "task " & taskRow.id.ToString(CultureInfo.InvariantCulture))
             Return False
         End Try
     End Function
@@ -1561,7 +1506,7 @@ Public Class Service1
                 Next
             End If
         Catch ex As Exception
-            log("  | >> Workload candidate lookup failed for task " & taskRow.id.ToString(CultureInfo.InvariantCulture) & ": " & ex.Message)
+            LogFailure("Look up assignment workload candidates", ex, "task " & taskRow.id.ToString(CultureInfo.InvariantCulture))
         End Try
 
         Dim primaryUsers = ParseCsvIds(cluster.cluster_users)
@@ -1711,14 +1656,11 @@ Public Class Service1
                 param.Add(v.Name, v.Value)
             Next
 
-            log(JsonConvert.SerializeObject(param))
-            log("")
-            log("")
             SubmitForm(param)
             Return True
         Catch ex As Exception
-            log("      ---- Error: ")
-            log("      ---- Error: " & ex.Message)
+            Dim pageId = If(p Is Nothing, "unknown", p.id.ToString(CultureInfo.InvariantCulture))
+            LogFailure("Submit workflow form", ex, "page " & pageId & ", record " & dataID)
             Return False
         End Try
 
