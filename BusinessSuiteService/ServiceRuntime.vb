@@ -4,6 +4,7 @@ Imports System.Data.SqlClient
 
 Friend NotInheritable Class ServiceRuntime
     Private Const RunLockName As String = "BusinessSuiteService.WorkflowCycle"
+    Private Shared ReadOnly StatusChangeSubmittedFrom As New Date(2026, 9, 1)
 
     Private Sub New()
     End Sub
@@ -199,6 +200,7 @@ DECLARE @rotationOffset bigint =
     FROM dbo.processes AS process_row WITH (READPAST)
     WHERE process_row.form_status_change = 1
       AND ISNULL(process_row.is_deleted, 0) = 0
+      AND process_row.submitted_on >= @SubmittedFrom
 )
 SELECT TOP (@BatchSize) process_row.id
 FROM pending_processes AS process_row
@@ -220,6 +222,7 @@ ORDER BY CASE WHEN process_row.changed_on >= DATEADD(day, -2, @now) THEN 0 ELSE 
         Using command As New SqlCommand(sql, connection)
             command.CommandTimeout = CommandTimeoutSeconds
             command.Parameters.Add("@BatchSize", SqlDbType.Int).Value = StatusChangeBatchSize
+            command.Parameters.Add("@SubmittedFrom", SqlDbType.Date).Value = StatusChangeSubmittedFrom
 
             Using reader = command.ExecuteReader(CommandBehavior.SequentialAccess)
                 While reader.Read()
